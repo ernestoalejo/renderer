@@ -1,7 +1,3 @@
 #!/bin/bash
 
-set -e
-set -u
-
-docker build -t ernestoalejo/renderer .
-docker run -i -t ernestoalejo/renderer bash
+docker run -v $(pwd)/src:/prerender/src -i -t ernestoalejo/renderer

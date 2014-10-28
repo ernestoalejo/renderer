@@ -13,4 +13,8 @@ RUN apt-get -y install libudev-dev libasound-dev libXtst-dev libnss3-dev libgcon
 RUN ln -sf /lib/$(arch)-linux-gnu/libudev.so.1 /lib/$(arch)-linux-gnu/libudev.so.0
 RUN cd /opt/cef && make BUILDTYPE=Release
 
-CMD /bin/bash
+RUN apt-get -y install scons
+
+ADD SConstruct /prerender/SConstruct
+
+CMD cd /prerender && /bin/bash

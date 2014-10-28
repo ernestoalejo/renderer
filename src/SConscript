@@ -3,7 +3,7 @@ import os
 
 
 appname = 'renderer'
-libs = []
+libs = ['cef', 'cef_dll_wrapper']
 flags = ['-Werror', '-Wall']
 
 
@@ -13,8 +13,13 @@ srcs = '''
 
 
 apppath = '#bin'
-include_paths = ['#include']
+include_paths = ['#include', '/opt/cef']
 lib_paths = ['/usr/local/lib', '#obj/lib']
 
 
-Program(os.path.join(apppath, appname), Split(srcs), CPPPATH=include_paths, LIBS=libs, LIBPATH=lib_paths, CPPFLAGS=flags)
+env = Environment()
+env.ParseConfig('pkg-config --cflags --libs gtk+-2.0')
+include_paths.append(env['CPPPATH'])
+
+
+env.Program(os.path.join(apppath, appname), Split(srcs), CPPPATH=include_paths, LIBS=libs, LIBPATH=lib_paths, CPPFLAGS=flags)

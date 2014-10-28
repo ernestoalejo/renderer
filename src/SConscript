@@ -1,0 +1,20 @@
+
+import os
+
+
+appname = 'renderer'
+libs = []
+flags = ['-Werror', '-Wall']
+
+
+srcs = '''
+
+'''
+
+
+apppath = '#bin'
+include_paths = ['#include']
+lib_paths = ['/usr/local/lib', '#obj/lib']
+
+
+Program(os.path.join(apppath, appname), Split(srcs), CPPPATH=include_paths, LIBS=libs, LIBPATH=lib_paths, CPPFLAGS=flags)

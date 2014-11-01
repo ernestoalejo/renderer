@@ -6,12 +6,16 @@
 #define BASE_UTIL_H_
 
 
+#include <cassert>
+
+#include "include/cef_task.h"
+
+
 #ifndef NDEBUG
   #define ASSERT(condition) if (!(condition)) { assert(false); }
 #else
   #define ASSERT(condition) ((void) 0)
 #endif
-
 
 #define REQUIRE_UI_THREAD()   ASSERT(CefCurrentlyOn(TID_UI));
 #define REQUIRE_IO_THREAD()   ASSERT(CefCurrentlyOn(TID_IO));

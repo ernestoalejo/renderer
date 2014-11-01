@@ -9,12 +9,14 @@ flags = ['-Werror', '-Wall']
 
 srcs = '''
   renderer/main.cc
+  renderer/app.cc
+  renderer/handler.cc
 '''
 
 
 apppath = '#bin'
-include_paths = ['#include', '/opt/cef']
-lib_paths = ['/usr/local/lib', '#obj/lib']
+include_paths = ['#src', '#cef']
+lib_paths = ['/usr/local/lib', '#cef', '#cef/obj.target']
 
 
 env = Environment()

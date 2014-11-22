@@ -1,12 +1,12 @@
 
-FROM ubuntu:14.04
+FROM ubuntu:14.10
 MAINTAINER Ernesto Alejo <ernestokarim@gmail.com>
 
 # Update the list of packages and install 7zip
 RUN apt-get update
 
 # Add libraries to compile the app
-RUN apt-get -y install cmake g++ scons libgtk2.0-dev
+RUN apt-get -y install cmake g++ scons libgtk2.0-dev valgrind
 
 # # Extract CEF
 # RUN apt-get -y install p7zip-full

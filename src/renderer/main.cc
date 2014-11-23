@@ -3,19 +3,25 @@
 // can be found in the LICENSE file.
 
 #include <glog/logging.h>
+#include <gflags/gflags.h>
 
 #include "renderer/app.h"
 
 
+DEFINE_bool(single_process, false, "Use a single process instead of the CEF original architecture");
+
+
 int main(int argc, char* argv[]) {
-  FLAGS_logtostderr = true;
+  // Enable gflags
+  google::ParseCommandLineFlags(&argc, &argv, true);
+
+  // Enable glog
   google::InitGoogleLogging(argv[0]);
   google::InstallFailureSignalHandler();
 
   CefMainArgs main_args(argc, argv);
 
   CefRefPtr<App> app(new App);
-  app->Initialize();
 
   // CEF shares the same executable for several process (render, plugins, GPU, etc.)
   // Run it now if we're one of them.
@@ -26,6 +32,10 @@ int main(int argc, char* argv[]) {
 
   CefSettings settings;
   CefString(&settings.locales_dir_path) = "/renderer/cef/locales";
+  CefString(&settings.user_agent) = "Renderer";
+  CefString(&settings.browser_subprocess_path) = "bin/subprocess";
+  settings.no_sandbox = true;
+  settings.single_process = FLAGS_single_process;
 
   CefInitialize(main_args, settings, app.get(), NULL);
 

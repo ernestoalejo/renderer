@@ -53,14 +53,4 @@ ENV LD_LIBRARY_PATH /renderer/cef
 ENV CHROME_DEVEL_SANDBOX /renderer/cef/chrome-sandbox
 ENV DISPLAY :100.0
 
-# Add concrete files (all but cef)
-ADD cef /renderer/cef
-ADD cmd /renderer/cmd
-
-# Correct permissions for the Chrome sandbox
-RUN chmod 4755 /renderer/cef/chrome-sandbox
-
-# Add SConstruct file from the root of the project (doesn't change a lot to be a volume)
-ADD SConstruct /renderer/SConstruct
-
 CMD (Xvfb :100 -ac &) && cd /renderer && /bin/bash

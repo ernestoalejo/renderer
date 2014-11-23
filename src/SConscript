@@ -1,22 +1,28 @@
-
-import os
-
-
-appname = 'renderer'
-libs = ['cef', 'cef_dll_wrapper', 'glog', 'gflags']
-flags = ['-Werror', '-Wall']
+# Copyright (c) 2014 The renderer Authors. All rights
+# reserved. Use of this source code is governed by a BSD-style license that
+# can be found in the LICENSE file.
 
 
-srcs = '''
+common_sources = '''
   renderer/app.cc
   renderer/handler.cc
-  renderer/main.cc
   renderer/render_handler.cc
   renderer/request_handler.cc
 '''
 
 
-apppath = '#bin'
+app_sources = common_sources + '''
+  renderer/main.cc
+'''
+
+
+subprocess_sources = common_sources + '''
+  renderer/subprocess.cc
+'''
+
+
+libs = ['cef', 'cef_dll_wrapper', 'glog', 'gflags']
+flags = ['-Werror', '-Wall']
 include_paths = ['#src', '#cef']
 lib_paths = ['/usr/local/lib', '#cef', '#cef/obj.target']
 
@@ -26,4 +32,8 @@ env.ParseConfig('pkg-config --cflags --libs gtk+-2.0')
 include_paths.append(env['CPPPATH'])
 
 
-env.Program(os.path.join(apppath, appname), Split(srcs), CPPPATH=include_paths, LIBS=libs, LIBPATH=lib_paths, CPPFLAGS=flags)
+env.Program('#bin/renderer', Split(app_sources), CPPPATH=include_paths,
+  LIBS=libs, LIBPATH=lib_paths, CPPFLAGS=flags)
+
+env.Program('#bin/subprocess', Split(subprocess_sources),
+  CPPPATH=include_paths, LIBS=libs, LIBPATH=lib_paths, CPPFLAGS=flags)

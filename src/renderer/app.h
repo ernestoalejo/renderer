@@ -13,8 +13,6 @@
 
 class App : public CefApp, public CefBrowserProcessHandler {
 public:
-  void Initialize();
-
   virtual CefRefPtr<CefBrowserProcessHandler> GetBrowserProcessHandler() OVERRIDE {
     return this;
   }

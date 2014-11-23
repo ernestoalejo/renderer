@@ -6,6 +6,8 @@
 
 #include <glog/logging.h>
 
+#include "include/cef_url.h"
+
 
 bool RequestHandler::OnBeforePluginLoad(CefRefPtr<CefBrowser> browser,
                                         const CefString& url,
@@ -18,6 +20,13 @@ bool RequestHandler::OnBeforePluginLoad(CefRefPtr<CefBrowser> browser,
 bool RequestHandler::OnBeforeResourceLoad(CefRefPtr<CefBrowser> browser,
                                     CefRefPtr<CefFrame> frame,
                                     CefRefPtr<CefRequest> request) {
-  LOG(INFO) << "resource request: " << request->GetURL().ToString();
+  CefURLParts parts;
+  bool valid = CefParseURL(request->GetURL(), parts);
+  DCHECK(valid);
+
+  CefString host(&parts.host);
+
+  VLOG(1) << "resource request: " << request->GetURL().ToString();
+
   return false;
 }

@@ -7,6 +7,8 @@
 
 #include "include/cef_app.h"
 
+#include "renderer/render_handler.h"
+
 
 class App : public CefApp, public CefBrowserProcessHandler {
 public:
@@ -19,6 +21,8 @@ public:
   virtual void OnContextInitialized() OVERRIDE;
 
 private:
+  CefRefPtr<RenderHandler> render_handler_;
+
   IMPLEMENT_REFCOUNTING(App);
 };
 

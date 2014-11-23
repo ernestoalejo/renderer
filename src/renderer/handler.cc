@@ -4,6 +4,9 @@
 
 #include "renderer/handler.h"
 
+#include <iostream>
+#include <cstdlib>
+
 #include "base/util.h"
 
 
@@ -14,9 +17,10 @@ Handler* g_instance = NULL;
 }  // namespace
 
 
-Handler::Handler() {
+Handler::Handler(CefRefPtr<RenderHandler> render_handler) {
   ASSERT(!g_instance);
   g_instance = this;
+  render_handler_ = render_handler;
 }
 
 Handler::~Handler() {
@@ -47,46 +51,21 @@ void Handler::OnBeforeClose(CefRefPtr<CefBrowser> browser) {
   }
 }
 
-// #include <sstream>
-// #include <string>
+void Handler::OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
+                                   bool isLoading, bool canGoBack,
+                                   bool canGoForward) {
+  REQUIRE_UI_THREAD();
 
-// #include "include/cef_app.h"
+  if (!isLoading) {
+    std::cout << "not loading" << std::endl;
+  }
+}
 
+void Handler::OnLoadError(CefRefPtr<CefBrowser> browser,
+                          CefRefPtr<CefFrame> frame,
+                          ErrorCode errorCode, const CefString& errorText,
+                          const CefString& failedUrl) {
+  REQUIRE_UI_THREAD();
 
-
-// void Handler::OnLoadError(CefRefPtr<CefBrowser> browser,
-//                                 CefRefPtr<CefFrame> frame,
-//                                 ErrorCode errorCode,
-//                                 const CefString& errorText,
-//                                 const CefString& failedUrl) {
-//   REQUIRE_UI_THREAD();
-
-//   // Don't display an error for downloaded files.
-//   if (errorCode == ERR_ABORTED)
-//     return;
-
-//   // Display a load error message.
-//   std::stringstream ss;
-//   ss << "<html><body bgcolor=\"white\">"
-//         "<h2>Failed to load URL " << std::string(failedUrl) <<
-//         " with error " << std::string(errorText) << " (" << errorCode <<
-//         ").</h2></body></html>";
-//   frame->LoadString(ss.str(), failedUrl);
-// }
-
-// void Handler::CloseAllBrowsers(bool force_close) {
-//   if (!CefCurrentlyOn(TID_UI)) {
-//     // Execute on the UI thread.
-//     CefPostTask(TID_UI,
-//         NewCefRunnableMethod(this, &Handler::CloseAllBrowsers,
-//                              force_close));
-//     return;
-//   }
-
-//   if (browser_list_.empty())
-//     return;
-
-//   BrowserList::const_iterator it = browser_list_.begin();
-//   for (; it != browser_list_.end(); ++it)
-//     (*it)->GetHost()->CloseBrowser(force_close);
-// }
+  std::cout << "error!" << std::string(errorText) << " in " << std::string(failedUrl) << std::endl;
+}

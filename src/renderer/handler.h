@@ -9,18 +9,18 @@
 
 #include <list>
 
+#include "renderer/render_handler.h"
 
-class Handler : public CefClient, public CefLifeSpanHandler, public CefLoadHandler {
+
+class Handler : public CefClient,
+                public CefLifeSpanHandler,
+                public CefLoadHandler {
 public:
-  Handler();
+  Handler(CefRefPtr<RenderHandler> render_handler);
   ~Handler();
 
   // Provide access to the single global instance of this object.
   static Handler* GetInstance();
-
-  // virtual CefRefPtr<CefDisplayHandler> GetDisplayHandler() OVERRIDE {
-  //   return this;
-  // }
 
   virtual CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() OVERRIDE {
     return this;
@@ -30,40 +30,30 @@ public:
     return this;
   }
 
+  virtual CefRefPtr<CefRenderHandler> GetRenderHandler() OVERRIDE {
+    return render_handler_;
+  }
+
+  // CefLifeSpanHandler methods
   virtual void OnAfterCreated(CefRefPtr<CefBrowser> browser) OVERRIDE;
   virtual void OnBeforeClose(CefRefPtr<CefBrowser> browser) OVERRIDE;
 
-private:
-  IMPLEMENT_REFCOUNTING(Handler);
+  // CefLoadHandler methods
+  virtual void OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
+                                    bool isLoading, bool canGoBack,
+                                    bool canGoForward) OVERRIDE;
+  virtual void OnLoadError(CefRefPtr<CefBrowser> browser,
+                           CefRefPtr<CefFrame> frame, ErrorCode errorCode,
+                           const CefString& errorText,
+                           const CefString& failedUrl) OVERRIDE;
 
+private:
   typedef std::list<CefRefPtr<CefBrowser> > BrowserList;
   BrowserList browser_list_;
+
+  CefRefPtr<CefRenderHandler> render_handler_;
+
+  IMPLEMENT_REFCOUNTING(Handler);
 };
 
 #endif  // RENDERER_HANDLER_H_
-
-
-
-//   // CefDisplayHandler methods:
-//   virtual void OnTitleChange(CefRefPtr<CefBrowser> browser,
-//                              const CefString& title) OVERRIDE;
-
-//   // CefLoadHandler methods:
-//   virtual void OnLoadError(CefRefPtr<CefBrowser> browser,
-//                            CefRefPtr<CefFrame> frame,
-//                            ErrorCode errorCode,
-//                            const CefString& errorText,
-//                            const CefString& failedUrl) OVERRIDE;
-
-//   // Request that all existing browser windows close.
-//   void CloseAllBrowsers(bool force_close);
-
-//   bool IsClosing() const { return is_closing_; }
-
-//  private:
-//   // List of existing browser windows. Only accessed on the CEF UI thread.
-//   typedef std::list<CefRefPtr<CefBrowser> > BrowserList;
-//   BrowserList browser_list_;
-
-//   bool is_closing_;
-// };

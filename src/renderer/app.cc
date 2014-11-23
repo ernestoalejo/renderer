@@ -13,15 +13,20 @@
 
 
 App::App() {
-  // empty
+  render_handler_ = new RenderHandler(1900, 800);
 }
 
 void App::OnContextInitialized() {
   REQUIRE_UI_THREAD();
 
-  CefRefPtr<Handler> handler(new Handler);
-  CefWindowInfo window_info;
+  CefRefPtr<Handler> handler(new Handler(render_handler_));
   CefBrowserSettings browser_settings;
+
+  CefWindowInfo window_info;
+  window_info.SetAsOffScreen(NULL);
+  window_info.SetTransparentPainting(true);
+
   CefBrowserHost::CreateBrowser(window_info, handler.get(),
-      "http://www.google.es/", browser_settings, NULL);
+      "http://getbootstrap.com/examples/navbar-static-top/", browser_settings,
+      NULL);
 }

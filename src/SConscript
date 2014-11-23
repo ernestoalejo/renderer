@@ -8,9 +8,10 @@ flags = ['-Werror', '-Wall']
 
 
 srcs = '''
-  renderer/main.cc
   renderer/app.cc
   renderer/handler.cc
+  renderer/main.cc
+  renderer/render_handler.cc
 '''
 
 

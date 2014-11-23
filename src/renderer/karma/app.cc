@@ -22,10 +22,8 @@ void App::OnContextInitialized() {
   REQUIRE_UI_THREAD();
 
   render_handler_ = new RenderHandler(1900, 800);
-  request_handler_ = new RequestHandler;
-  request_handler_->Initialize();
 
-  CefRefPtr<Handler> handler(new Handler(render_handler_, request_handler_));
+  CefRefPtr<Handler> handler(new Handler(render_handler_));
   CefBrowserSettings browser_settings;
 
   CefWindowInfo window_info;

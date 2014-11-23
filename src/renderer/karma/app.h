@@ -8,7 +8,6 @@
 #include "include/cef_app.h"
 
 #include "renderer/karma/render_handler.h"
-#include "renderer/karma/request_handler.h"
 
 
 namespace karma {
@@ -24,7 +23,6 @@ public:
 
 private:
   CefRefPtr<RenderHandler> render_handler_;
-  CefRefPtr<RequestHandler> request_handler_;
 
   IMPLEMENT_REFCOUNTING(App);
 };

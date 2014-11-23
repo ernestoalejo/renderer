@@ -8,7 +8,6 @@ common_sources = '''
   renderer/karma/app.cc
   renderer/karma/handler.cc
   renderer/karma/render_handler.cc
-  renderer/karma/request_handler.cc
 '''
 
 

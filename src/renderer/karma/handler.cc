@@ -19,9 +19,8 @@ Handler* g_instance = NULL;
 }  // namespace
 
 
-Handler::Handler(CefRefPtr<RenderHandler> render_handler,
-                 CefRefPtr<RequestHandler> request_handler)
-: render_handler_(render_handler), request_handler_(request_handler)
+Handler::Handler(CefRefPtr<RenderHandler> render_handler)
+: render_handler_(render_handler)
 {
   ASSERT(!g_instance);
   g_instance = this;

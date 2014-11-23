@@ -10,7 +10,6 @@
 #include <list>
 
 #include "renderer/karma/render_handler.h"
-#include "renderer/karma/request_handler.h"
 
 
 namespace karma {
@@ -20,8 +19,7 @@ class Handler : public CefClient,
                 public CefLifeSpanHandler,
                 public CefLoadHandler {
 public:
-  Handler(CefRefPtr<RenderHandler> render_handler,
-          CefRefPtr<RequestHandler> request_handler);
+  Handler(CefRefPtr<RenderHandler> render_handler);
   ~Handler();
 
   // Provide access to the single global instance of this object.
@@ -37,10 +35,6 @@ public:
 
   virtual CefRefPtr<CefRenderHandler> GetRenderHandler() OVERRIDE {
     return render_handler_;
-  }
-
-  virtual CefRefPtr<CefRequestHandler> GetRequestHandler() OVERRIDE {
-    return request_handler_;
   }
 
   // CefLifeSpanHandler methods
@@ -61,7 +55,6 @@ private:
   BrowserList browser_list_;
 
   CefRefPtr<CefRenderHandler> render_handler_;
-  CefRefPtr<CefRequestHandler> request_handler_;
 
   void ExtractSourceCode(CefRefPtr<CefBrowser> browser);
 

@@ -23,8 +23,8 @@ subprocess_sources = '''
 
 libs = ['cef', 'cef_dll_wrapper', 'glog', 'gflags']
 flags = ['-Werror', '-Wall']
-include_paths = ['#src', '#cef']
-lib_paths = ['/usr/local/lib', '#cef', '#cef/obj.target']
+include_paths = ['#src', '/cef']
+lib_paths = ['/usr/local/lib', '/cef', '/cef/obj.target']
 
 
 env = Environment()

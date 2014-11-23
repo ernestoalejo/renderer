@@ -16,7 +16,6 @@ namespace karma {
 
 
 class Handler : public CefClient,
-                public CefLifeSpanHandler,
                 public CefLoadHandler {
 public:
   Handler(CefRefPtr<RenderHandler> render_handler);
@@ -25,10 +24,6 @@ public:
   // Provide access to the single global instance of this object.
   static Handler* GetInstance();
 
-  virtual CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() OVERRIDE {
-    return this;
-  }
-
   virtual CefRefPtr<CefLoadHandler> GetLoadHandler() OVERRIDE {
     return this;
   }
@@ -36,10 +31,6 @@ public:
   virtual CefRefPtr<CefRenderHandler> GetRenderHandler() OVERRIDE {
     return render_handler_;
   }
-
-  // CefLifeSpanHandler methods
-  virtual void OnAfterCreated(CefRefPtr<CefBrowser> browser) OVERRIDE;
-  virtual void OnBeforeClose(CefRefPtr<CefBrowser> browser) OVERRIDE;
 
   // CefLoadHandler methods
   virtual void OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
@@ -51,12 +42,7 @@ public:
                            const CefString& failedUrl) OVERRIDE;
 
 private:
-  typedef std::list<CefRefPtr<CefBrowser> > BrowserList;
-  BrowserList browser_list_;
-
   CefRefPtr<CefRenderHandler> render_handler_;
-
-  void ExtractSourceCode(CefRefPtr<CefBrowser> browser);
 
   IMPLEMENT_REFCOUNTING(Handler);
 };

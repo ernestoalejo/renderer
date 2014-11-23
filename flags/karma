@@ -12,10 +12,11 @@
 # Blacklist some unwanted domains
 -blacklisted_domains=config/blacklisted-domains
 
--url=http://www.laovejaverde.es/
+-url=http://www.google.com/
 
 # This files have a special location in development
 -locales_dir_path=/cef/locales
 -resources_dir_path=/cef
 
 -karma
+

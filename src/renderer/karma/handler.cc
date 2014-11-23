@@ -34,26 +34,6 @@ Handler* Handler::GetInstance() {
   return g_instance;
 }
 
-void Handler::OnAfterCreated(CefRefPtr<CefBrowser> browser) {
-  REQUIRE_UI_THREAD();
-
-  // Save a reference to the created browser
-  browser_list_.push_back(browser);
-}
-
-void Handler::OnBeforeClose(CefRefPtr<CefBrowser> browser) {
-  REQUIRE_UI_THREAD();
-
-  // Remove our reference to the browser
-  BrowserList::iterator bit = browser_list_.begin();
-  for (; bit != browser_list_.end(); ++bit) {
-    if ((*bit)->IsSame(browser)) {
-      browser_list_.erase(bit);
-      break;
-    }
-  }
-}
-
 void Handler::OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
                                    bool isLoading, bool canGoBack,
                                    bool canGoForward) {
@@ -61,7 +41,6 @@ void Handler::OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
 
   if (!isLoading) {
     LOG(INFO) << "page loaded: " << browser->GetMainFrame()->GetURL().ToString();
-    ExtractSourceCode(browser);
   }
 }
 
@@ -76,23 +55,6 @@ void Handler::OnLoadError(CefRefPtr<CefBrowser> browser,
   }
 
   LOG(FATAL) << "error loading (" << errorCode << "): " << errorText.ToString();
-}
-
-void Handler::ExtractSourceCode(CefRefPtr<CefBrowser> browser) {
-  class Visitor : public CefStringVisitor {
-  public:
-    virtual void Visit(const CefString& source) OVERRIDE {
-      LOG(INFO) << "source obtained";
-      // LOG(INFO) << source.ToString();
-
-      CefQuitMessageLoop();
-    }
-
-  private:
-    IMPLEMENT_REFCOUNTING(Visitor);
-  };
-
-  browser->GetMainFrame()->GetSource(new Visitor());
 }
 
 

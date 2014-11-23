@@ -1,3 +1,15 @@
--single_process
+
+# glogs flags
 -logtostderr
+-colorlogtostderr
+
+# Use a single process while debugging
+-single_process
+
+# Verbose logging level
 -v=1
+
+# Blacklist some unwanted domains
+-blacklisted_domains=config/blacklisted-domains
+
+-url=http://laovejaverde.es

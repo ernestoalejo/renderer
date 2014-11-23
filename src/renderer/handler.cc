@@ -77,8 +77,8 @@ void Handler::ExtractSourceCode(CefRefPtr<CefBrowser> browser) {
   class Visitor : public CefStringVisitor {
   public:
     virtual void Visit(const CefString& source) OVERRIDE {
-      // std::cout << source.ToString() << std::endl;
       LOG(INFO) << "source obtained";
+      // LOG(INFO) << source.ToString();
 
       CefQuitMessageLoop();
     }

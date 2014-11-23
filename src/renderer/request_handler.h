@@ -10,16 +10,20 @@
 
 class RequestHandler : public CefRequestHandler {
 public:
+  // CefRequestHandler methods
   virtual bool OnBeforePluginLoad(CefRefPtr<CefBrowser> browser,
                                   const CefString& url,
                                   const CefString& policy_url,
                                   CefRefPtr<CefWebPluginInfo> info) OVERRIDE;
-
   virtual bool OnBeforeResourceLoad(CefRefPtr<CefBrowser> browser,
                                     CefRefPtr<CefFrame> frame,
                                     CefRefPtr<CefRequest> request);
 
+  void Initialize();
+
 private:
+  std::vector<std::string> blacklisted_domains_;
+
   IMPLEMENT_REFCOUNTING(RequestHandler);
 };
 

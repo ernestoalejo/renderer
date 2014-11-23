@@ -1,5 +1,5 @@
-// Copyright (c) 2014 The renderer Authors. All rights
-// reserved. Use of this source code is governed by a BSD-style license that
+// Copyright (c) 2014 The renderer authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
 #ifndef RENDERER_APP_H_

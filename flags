@@ -12,4 +12,4 @@
 # Blacklist some unwanted domains
 -blacklisted_domains=config/blacklisted-domains
 
--url=http://laovejaverde.es
+-url=http://www.laovejaverde.es/

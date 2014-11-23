@@ -70,7 +70,11 @@ void Handler::OnLoadError(CefRefPtr<CefBrowser> browser,
                           const CefString& failedUrl) {
   REQUIRE_UI_THREAD();
 
-  LOG(ERROR) << errorText.ToString() << " in " << failedUrl.ToString();
+  if (errorCode == ERR_CONNECTION_REFUSED) {
+    LOG(FATAL) << "cannot connect to " << failedUrl.ToString();
+  }
+
+  LOG(FATAL) << "error loading (" << errorCode << "): " << errorText.ToString();
 }
 
 void Handler::ExtractSourceCode(CefRefPtr<CefBrowser> browser) {

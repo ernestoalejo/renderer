@@ -11,12 +11,12 @@ common_sources = '''
 '''
 
 
-app_sources = common_sources + '''
+app_sources = '''
   renderer/main.cc
 '''
 
 
-subprocess_sources = common_sources + '''
+subprocess_sources = '''
   renderer/subprocess.cc
 '''
 
@@ -32,8 +32,17 @@ env.ParseConfig('pkg-config --cflags --libs gtk+-2.0')
 include_paths.append(env['CPPPATH'])
 
 
-env.Program('#bin/renderer', Split(app_sources), CPPPATH=include_paths,
-  LIBS=libs, LIBPATH=lib_paths, CPPFLAGS=flags)
+def create_objs(sources):
+  return [env.Object(source, CPPPATH=include_paths, CPPFLAGS=flags) for source in Split(sources)]
 
-env.Program('#bin/subprocess', Split(subprocess_sources),
-  CPPPATH=include_paths, LIBS=libs, LIBPATH=lib_paths, CPPFLAGS=flags)
+
+common_objs = create_objs(common_sources)
+app_objs = common_objs + create_objs(app_sources)
+subprocess_objs = common_objs + create_objs(subprocess_sources)
+
+
+env.Program('#bin/renderer', app_objs, LIBS=libs,
+    LIBPATH=lib_paths)
+
+env.Program('#bin/subprocess', subprocess_objs, LIBS=libs,
+    LIBPATH=lib_paths, CPPFLAGS=flags)

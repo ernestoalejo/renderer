@@ -1,0 +1,3 @@
+-single_process
+-logtostderr
+-v=1

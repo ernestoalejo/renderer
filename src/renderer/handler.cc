@@ -8,6 +8,7 @@
 #include <cstdlib>
 
 #include "base/util.h"
+#include "include/cef_app.h"
 
 
 namespace {
@@ -57,7 +58,8 @@ void Handler::OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
   REQUIRE_UI_THREAD();
 
   if (!isLoading) {
-    std::cout << "not loading" << std::endl;
+    std::cout << " * Page loaded from: " << browser->GetMainFrame()->GetURL().ToString() << std::endl;
+    ExtractSourceCode(browser);
   }
 }
 
@@ -68,4 +70,19 @@ void Handler::OnLoadError(CefRefPtr<CefBrowser> browser,
   REQUIRE_UI_THREAD();
 
   std::cout << "error!" << std::string(errorText) << " in " << std::string(failedUrl) << std::endl;
+}
+
+void Handler::ExtractSourceCode(CefRefPtr<CefBrowser> browser) {
+  class Visitor : public CefStringVisitor {
+  public:
+    virtual void Visit(const CefString& source) OVERRIDE {
+      std::cout << source.ToString() << std::endl;
+      CefQuitMessageLoop();
+    }
+
+  private:
+    IMPLEMENT_REFCOUNTING(Visitor);
+  };
+
+  browser->GetMainFrame()->GetSource(new Visitor());
 }

@@ -53,6 +53,8 @@ private:
 
   CefRefPtr<CefRenderHandler> render_handler_;
 
+  void ExtractSourceCode(CefRefPtr<CefBrowser> browser);
+
   IMPLEMENT_REFCOUNTING(Handler);
 };
 

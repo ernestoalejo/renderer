@@ -27,6 +27,6 @@ void App::OnContextInitialized() {
   window_info.SetTransparentPainting(true);
 
   CefBrowserHost::CreateBrowser(window_info, handler.get(),
-      "http://getbootstrap.com/examples/navbar-static-top/", browser_settings,
+      "http://www.laovejaverde.es/", browser_settings,
       NULL);
 }

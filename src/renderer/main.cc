@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
 
   CefMainArgs main_args(argc, argv);
 
-  CefRefPtr<App> app(new App);
+  CefRefPtr<CefApp> app(GetCurrentApp());
 
   // CEF shares the same executable for several process (render, plugins, GPU, etc.)
   // Run it now if we're one of them.

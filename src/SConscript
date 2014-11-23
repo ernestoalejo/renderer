@@ -5,9 +5,10 @@
 
 common_sources = '''
   renderer/app.cc
-  renderer/handler.cc
-  renderer/render_handler.cc
-  renderer/request_handler.cc
+  renderer/karma/app.cc
+  renderer/karma/handler.cc
+  renderer/karma/render_handler.cc
+  renderer/karma/request_handler.cc
 '''
 
 

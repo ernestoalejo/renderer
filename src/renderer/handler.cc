@@ -4,8 +4,7 @@
 
 #include "renderer/handler.h"
 
-#include <iostream>
-#include <cstdlib>
+#include <glog/logging.h>
 
 #include "base/util.h"
 #include "include/cef_app.h"
@@ -18,10 +17,12 @@ Handler* g_instance = NULL;
 }  // namespace
 
 
-Handler::Handler(CefRefPtr<RenderHandler> render_handler) {
+Handler::Handler(CefRefPtr<RenderHandler> render_handler,
+                 CefRefPtr<RequestHandler> request_handler)
+: render_handler_(render_handler), request_handler_(request_handler)
+{
   ASSERT(!g_instance);
   g_instance = this;
-  render_handler_ = render_handler;
 }
 
 Handler::~Handler() {
@@ -58,7 +59,7 @@ void Handler::OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
   REQUIRE_UI_THREAD();
 
   if (!isLoading) {
-    std::cout << " * Page loaded from: " << browser->GetMainFrame()->GetURL().ToString() << std::endl;
+    LOG(INFO) << "page loaded: " << browser->GetMainFrame()->GetURL().ToString();
     ExtractSourceCode(browser);
   }
 }
@@ -69,14 +70,16 @@ void Handler::OnLoadError(CefRefPtr<CefBrowser> browser,
                           const CefString& failedUrl) {
   REQUIRE_UI_THREAD();
 
-  std::cout << "error!" << std::string(errorText) << " in " << std::string(failedUrl) << std::endl;
+  LOG(ERROR) << errorText.ToString() << " in " << failedUrl.ToString();
 }
 
 void Handler::ExtractSourceCode(CefRefPtr<CefBrowser> browser) {
   class Visitor : public CefStringVisitor {
   public:
     virtual void Visit(const CefString& source) OVERRIDE {
-      std::cout << source.ToString() << std::endl;
+      // std::cout << source.ToString() << std::endl;
+      LOG(INFO) << "source obtained";
+
       CefQuitMessageLoop();
     }
 

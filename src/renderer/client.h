@@ -10,19 +10,17 @@
 #include <list>
 
 #include "renderer/render_handler.h"
-#include "renderer/request_handler.h"
 
 
-class Handler : public CefClient,
+class Client : public CefClient,
                 public CefLifeSpanHandler,
                 public CefLoadHandler {
 public:
-  Handler(CefRefPtr<RenderHandler> render_handler,
-          CefRefPtr<RequestHandler> request_handler);
-  ~Handler();
+  Client(CefRefPtr<RenderHandler> render_handler);
+  ~Client();
 
   // Provide access to the single global instance of this object.
-  static Handler* GetInstance();
+  static Client* GetInstance();
 
   virtual CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() OVERRIDE {
     return this;
@@ -34,10 +32,6 @@ public:
 
   virtual CefRefPtr<CefRenderHandler> GetRenderHandler() OVERRIDE {
     return render_handler_;
-  }
-
-  virtual CefRefPtr<CefRequestHandler> GetRequestHandler() OVERRIDE {
-    return request_handler_;
   }
 
   // CefLifeSpanHandler methods
@@ -58,11 +52,10 @@ private:
   BrowserList browser_list_;
 
   CefRefPtr<CefRenderHandler> render_handler_;
-  CefRefPtr<CefRequestHandler> request_handler_;
 
   void ExtractSourceCode(CefRefPtr<CefBrowser> browser);
 
-  IMPLEMENT_REFCOUNTING(Handler);
+  IMPLEMENT_REFCOUNTING(Client);
 };
 
 #endif  // RENDERER_HANDLER_H_

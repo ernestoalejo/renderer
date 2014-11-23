@@ -2,13 +2,20 @@
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
+#include <glog/logging.h>
+
 #include "renderer/app.h"
 
 
 int main(int argc, char* argv[]) {
+  FLAGS_logtostderr = true;
+  google::InitGoogleLogging(argv[0]);
+  google::InstallFailureSignalHandler();
+
   CefMainArgs main_args(argc, argv);
 
   CefRefPtr<App> app(new App);
+  app->Initialize();
 
   // CEF shares the same executable for several process (render, plugins, GPU, etc.)
   // Run it now if we're one of them.

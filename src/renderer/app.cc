@@ -12,14 +12,15 @@
 #include "renderer/handler.h"
 
 
-App::App() {
+void App::Initialize() {
   render_handler_ = new RenderHandler(1900, 800);
+  request_handler_ = new RequestHandler;
 }
 
 void App::OnContextInitialized() {
   REQUIRE_UI_THREAD();
 
-  CefRefPtr<Handler> handler(new Handler(render_handler_));
+  CefRefPtr<Handler> handler(new Handler(render_handler_, request_handler_));
   CefBrowserSettings browser_settings;
 
   CefWindowInfo window_info;

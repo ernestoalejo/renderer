@@ -3,7 +3,7 @@ import os
 
 
 appname = 'renderer'
-libs = ['cef', 'cef_dll_wrapper']
+libs = ['cef', 'cef_dll_wrapper', 'glog', 'gflags']
 flags = ['-Werror', '-Wall']
 
 
@@ -12,6 +12,7 @@ srcs = '''
   renderer/handler.cc
   renderer/main.cc
   renderer/render_handler.cc
+  renderer/request_handler.cc
 '''
 
 

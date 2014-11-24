@@ -9,8 +9,8 @@
 
 
 DEFINE_bool(single_process, false, "Use a single process instead of the CEF original architecture");
-DEFINE_string(locales_dir_path, "cef/locales", "Path to the locales packages");
-DEFINE_string(resources_dir_path, "cef", "Path to the cef and devtools pak files");
+DEFINE_string(locales_dir_path, "locales", "Path to the locales packages");
+DEFINE_string(resources_dir_path, ".", "Path to the cef and devtools pak files");
 
 
 int main(int argc, char* argv[]) {

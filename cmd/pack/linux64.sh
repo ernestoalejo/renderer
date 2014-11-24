@@ -5,7 +5,7 @@ set -u
 
 NAME=renderer-linux64
 DEST=/tmp/pack/$NAME
-VERSION=0.1.0
+VERSION=$1
 
 # Build the binaries
 scons -c

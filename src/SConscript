@@ -3,21 +3,12 @@
 # can be found in the LICENSE file.
 
 
-common_sources = '''
+sources = '''
   renderer/app.cc
   renderer/karma/app.cc
   renderer/karma/handler.cc
   renderer/karma/render_handler.cc
-'''
-
-
-app_sources = '''
   renderer/main.cc
-'''
-
-
-subprocess_sources = '''
-  renderer/subprocess.cc
 '''
 
 
@@ -36,13 +27,7 @@ def create_objs(sources):
   return [env.Object(source, CPPPATH=include_paths, CPPFLAGS=flags) for source in Split(sources)]
 
 
-common_objs = create_objs(common_sources)
-app_objs = common_objs + create_objs(app_sources)
-subprocess_objs = common_objs + create_objs(subprocess_sources)
+objs = create_objs(sources)
 
 
-env.Program('#bin/renderer', app_objs, LIBS=libs,
-    LIBPATH=lib_paths)
-
-env.Program('#bin/subprocess', subprocess_objs, LIBS=libs,
-    LIBPATH=lib_paths, CPPFLAGS=flags)
+env.Program('#bin/renderer', objs, LIBS=libs, LIBPATH=lib_paths)

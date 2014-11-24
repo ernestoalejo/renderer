@@ -33,9 +33,7 @@ int main(int argc, char* argv[]) {
   }
 
   CefSettings settings;
-  CefString(&settings.locales_dir_path) = "/renderer/cef/locales";
   CefString(&settings.user_agent) = "Renderer";
-  CefString(&settings.browser_subprocess_path) = "bin/subprocess";
   CefString(&settings.locales_dir_path) = FLAGS_locales_dir_path;
   CefString(&settings.resources_dir_path) = FLAGS_resources_dir_path;
   settings.no_sandbox = true;

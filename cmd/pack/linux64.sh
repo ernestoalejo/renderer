@@ -15,7 +15,7 @@ scons
 rm -rf $DEST
 mkdir -p $DEST
 cp bin/* $DEST
-cp -R dist/renderer.node $DEST/bin
+cp -R dist/renderer.node $DEST
 cp -R /cef/* $DEST
 rm -r $DEST/include
 

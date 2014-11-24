@@ -3,7 +3,7 @@
 set -e
 set -u
 
-NAME=renderer-linux64
+NAME=renderer-linux-x64
 DEST=/tmp/pack/$NAME
 VERSION=$1
 
@@ -26,4 +26,4 @@ rm -r $DEST/include
 rm -rf packs
 mkdir packs
 cd packs
-mv $DEST.tar.gz $NAME.$VERSION.tar.gz
+mv $DEST.tar.gz $NAME-$VERSION.tar.gz

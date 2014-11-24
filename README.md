@@ -10,7 +10,7 @@ Resources
 
  * [Precompiled binaries](https://googledrive.com/host/0B-unE3_O4B0uSWFYdEJZa1hEQmc/precompiled)
  * [Karma plugin](https://github.com/ernestoalejo/karma-renderer-launcher)
- * [Wrapper for NodeJS](https://github.com/ernestoalejo/npm-renderer)
+ * [Wrapper for NodeJS](https://github.com/ernestoalejo/cef-renderer)
 
 
 

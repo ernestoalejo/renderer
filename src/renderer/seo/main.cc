@@ -2,15 +2,14 @@
 // Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
-#ifndef RENDERER_APP_H_
-#define RENDERER_APP_H_
+#include <gflags/gflags.h>
 
-#include "include/cef_app.h"
-
-
-extern CefRefPtr<CefApp> GetCurrentApp();
+#include "renderer/seo/app.h"
 
 
+int main(int argc, char* argv[]) {
+  InitializeBeforeApp();
+  InitializeAfterApp(new seo::App);
 
-#endif  // RENDERER_APP_H_
-
+  return 0;
+}

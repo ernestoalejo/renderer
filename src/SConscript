@@ -3,12 +3,18 @@
 # can be found in the LICENSE file.
 
 
-sources = '''
-  renderer/app.cc
+common_sources = '''
   renderer/karma/app.cc
   renderer/karma/handler.cc
   renderer/karma/render_handler.cc
-  renderer/main.cc
+  renderer/common/initialize.cc
+'''
+
+karma_sources = '''
+  renderer/karma/main.cc
+'''
+
+seo_sources = '''
 '''
 
 
@@ -27,7 +33,10 @@ def create_objs(sources):
   return [env.Object(source, CPPPATH=include_paths, CPPFLAGS=flags) for source in Split(sources)]
 
 
-objs = create_objs(sources)
+common_objs = create_objs(common_sources)
+karma_objs = common_objs + create_objs(karma_sources)
+seo_objs = common_objs + create_objs(seo_sources)
 
 
-env.Program('#bin/renderer', objs, LIBS=libs, LIBPATH=lib_paths)
+env.Program('#bin/karma', karma_objs, LIBS=libs, LIBPATH=lib_paths)
+# env.Program('#bin/seo', seo_objs, LIBS=libs, LIBPATH=lib_paths)

@@ -18,6 +18,9 @@ cp bin/* $DEST
 cp -R /cef/* $DEST
 rm -r $DEST/include
 
+# Compress 3rd party libraries
+cp /usr/lib/libglog.so.0.0.0 $DEST/libglog.so
+
 # Compress the pack with the files
 (cd /tmp/pack && tar -vpczf $NAME.tar.gz $NAME)
 

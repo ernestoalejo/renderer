@@ -35,6 +35,7 @@ void App::OnContextInitialized() {
     LOG(FATAL) << "the url flag cannot be empty";
   }
 
+  LOG(INFO) << "opening: " << url;
   CefBrowserHost::CreateBrowser(window_info, handler.get(), url.c_str(),
       browser_settings, NULL);
 }

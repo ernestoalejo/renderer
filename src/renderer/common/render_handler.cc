@@ -2,7 +2,10 @@
 // Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
-#include "renderer/render_handler.h"
+#include "renderer/common/render_handler.h"
+
+
+namespace common {
 
 
 RenderHandler::RenderHandler(int width, int height)
@@ -10,3 +13,6 @@ RenderHandler::RenderHandler(int width, int height)
 {
   // empty
 }
+
+
+}  // namespace common

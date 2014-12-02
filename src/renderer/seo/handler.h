@@ -7,26 +7,22 @@
 
 #include "include/cef_client.h"
 
-#include <list>
+#include "renderer/common/render_handler.h"
+#include "renderer/seo/request_handler.h"
 
-#include "renderer/render_handler.h"
-#include "renderer/request_handler.h"
+
+namespace seo {
 
 
 class Handler : public CefClient,
-                public CefLifeSpanHandler,
                 public CefLoadHandler {
 public:
-  Handler(CefRefPtr<RenderHandler> render_handler,
-          CefRefPtr<RequestHandler> request_handler);
+  Handler(CefRefPtr<common::RenderHandler> render_handler,
+          CefRefPtr<seo::RequestHandler> request_handler);
   ~Handler();
 
   // Provide access to the single global instance of this object.
   static Handler* GetInstance();
-
-  virtual CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() OVERRIDE {
-    return this;
-  }
 
   virtual CefRefPtr<CefLoadHandler> GetLoadHandler() OVERRIDE {
     return this;
@@ -40,10 +36,6 @@ public:
     return request_handler_;
   }
 
-  // CefLifeSpanHandler methods
-  virtual void OnAfterCreated(CefRefPtr<CefBrowser> browser) OVERRIDE;
-  virtual void OnBeforeClose(CefRefPtr<CefBrowser> browser) OVERRIDE;
-
   // CefLoadHandler methods
   virtual void OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
                                     bool isLoading, bool canGoBack,
@@ -54,9 +46,6 @@ public:
                            const CefString& failedUrl) OVERRIDE;
 
 private:
-  typedef std::list<CefRefPtr<CefBrowser> > BrowserList;
-  BrowserList browser_list_;
-
   CefRefPtr<CefRenderHandler> render_handler_;
   CefRefPtr<CefRequestHandler> request_handler_;
 
@@ -64,5 +53,9 @@ private:
 
   IMPLEMENT_REFCOUNTING(Handler);
 };
+
+
+}  // namespace seo
+
 
 #endif  // RENDERER_HANDLER_H_

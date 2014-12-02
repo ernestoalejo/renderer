@@ -8,7 +8,7 @@
 #include "include/cef_render_handler.h"
 
 
-namespace karma {
+namespace common {
 
 
 class RenderHandler : public CefRenderHandler {
@@ -35,7 +35,7 @@ private:
 };
 
 
-}  // namespace karma
+}  // namespace common
 
 
 #endif  // RENDERER_RENDER_HANDLER_H_

@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
-#include "renderer/request_handler.h"
+#include "renderer/seo/request_handler.h"
 
 #include <gflags/gflags.h>
 #include <glog/logging.h>
@@ -12,6 +12,9 @@
 
 
 DEFINE_string(blacklisted_domains, "", "file with a list (one per line) of blacklisted domains");
+
+
+namespace seo {
 
 
 void RequestHandler::Initialize() {
@@ -64,3 +67,6 @@ bool RequestHandler::OnBeforeResourceLoad(CefRefPtr<CefBrowser> browser,
 
   return false;
 }
+
+
+}  // namespace seo

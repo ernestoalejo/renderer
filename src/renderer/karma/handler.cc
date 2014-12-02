@@ -19,7 +19,7 @@ Handler* g_instance = NULL;
 }  // namespace
 
 
-Handler::Handler(CefRefPtr<RenderHandler> render_handler)
+Handler::Handler(CefRefPtr<common::RenderHandler> render_handler)
 : render_handler_(render_handler)
 {
   ASSERT(!g_instance);

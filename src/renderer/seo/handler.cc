@@ -2,13 +2,15 @@
 // Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
-#include "renderer/handler.h"
+#include "renderer/seo/handler.h"
 
 #include <glog/logging.h>
 
 #include "base/util.h"
 #include "include/cef_app.h"
 
+
+namespace seo {
 
 namespace {
 
@@ -17,7 +19,7 @@ Handler* g_instance = NULL;
 }  // namespace
 
 
-Handler::Handler(CefRefPtr<RenderHandler> render_handler,
+Handler::Handler(CefRefPtr<common::RenderHandler> render_handler,
                  CefRefPtr<RequestHandler> request_handler)
 : render_handler_(render_handler), request_handler_(request_handler)
 {
@@ -31,26 +33,6 @@ Handler::~Handler() {
 
 Handler* Handler::GetInstance() {
   return g_instance;
-}
-
-void Handler::OnAfterCreated(CefRefPtr<CefBrowser> browser) {
-  REQUIRE_UI_THREAD();
-
-  // Save a reference to the created browser
-  browser_list_.push_back(browser);
-}
-
-void Handler::OnBeforeClose(CefRefPtr<CefBrowser> browser) {
-  REQUIRE_UI_THREAD();
-
-  // Remove our reference to the browser
-  BrowserList::iterator bit = browser_list_.begin();
-  for (; bit != browser_list_.end(); ++bit) {
-    if ((*bit)->IsSame(browser)) {
-      browser_list_.erase(bit);
-      break;
-    }
-  }
 }
 
 void Handler::OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
@@ -93,3 +75,6 @@ void Handler::ExtractSourceCode(CefRefPtr<CefBrowser> browser) {
 
   browser->GetMainFrame()->GetSource(new Visitor());
 }
+
+
+}  // namespace seo

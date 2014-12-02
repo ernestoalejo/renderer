@@ -4,17 +4,21 @@
 
 
 common_sources = '''
-  renderer/karma/app.cc
-  renderer/karma/handler.cc
-  renderer/karma/render_handler.cc
   renderer/common/initialize.cc
+  renderer/common/render_handler.cc
 '''
 
 karma_sources = '''
+  renderer/karma/app.cc
+  renderer/karma/handler.cc
   renderer/karma/main.cc
 '''
 
 seo_sources = '''
+  renderer/seo/app.cc
+  renderer/seo/handler.cc
+  renderer/seo/main.cc
+  renderer/seo/request_handler.cc
 '''
 
 
@@ -39,4 +43,4 @@ seo_objs = common_objs + create_objs(seo_sources)
 
 
 env.Program('#bin/karma', karma_objs, LIBS=libs, LIBPATH=lib_paths)
-# env.Program('#bin/seo', seo_objs, LIBS=libs, LIBPATH=lib_paths)
+env.Program('#bin/seo', seo_objs, LIBS=libs, LIBPATH=lib_paths)

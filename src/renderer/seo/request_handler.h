@@ -8,6 +8,9 @@
 #include "include/cef_request_handler.h"
 
 
+namespace seo {
+
+
 class RequestHandler : public CefRequestHandler {
 public:
   // CefRequestHandler methods
@@ -26,6 +29,9 @@ private:
 
   IMPLEMENT_REFCOUNTING(RequestHandler);
 };
+
+
+}  // namespace seo
 
 
 #endif  // RENDERER_REQUEST_HANDLER_H_

@@ -4,12 +4,16 @@
 
 #include <gflags/gflags.h>
 
+#include "renderer/common/initialize.h"
 #include "renderer/seo/app.h"
 
 
 int main(int argc, char* argv[]) {
-  InitializeBeforeApp();
-  InitializeAfterApp(new seo::App);
+  InitializeBeforeApp(argv);
 
-  return 0;
+  seo::App* app = new seo::App;
+
+  int result = InitializeAfterApp(argc, argv, CefRefPtr<CefApp>(app));
+
+  return result;
 }

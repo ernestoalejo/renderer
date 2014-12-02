@@ -7,9 +7,7 @@
 
 #include "include/cef_client.h"
 
-#include <list>
-
-#include "renderer/karma/render_handler.h"
+#include "renderer/common/render_handler.h"
 
 
 namespace karma {
@@ -18,7 +16,7 @@ namespace karma {
 class Handler : public CefClient,
                 public CefLoadHandler {
 public:
-  Handler(CefRefPtr<RenderHandler> render_handler);
+  Handler(CefRefPtr<common::RenderHandler> render_handler);
   ~Handler();
 
   // Provide access to the single global instance of this object.

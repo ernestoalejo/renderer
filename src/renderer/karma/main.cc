@@ -10,5 +10,10 @@
 
 int main(int argc, char* argv[]) {
   InitializeBeforeApp(argv);
-  return InitializeAfterApp(argc, argv, new karma::App);
+
+  karma::App* app = new karma::App;
+
+  int result = InitializeAfterApp(argc, argv, CefRefPtr<CefApp>(app));
+
+  return result;
 }

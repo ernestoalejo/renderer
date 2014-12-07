@@ -5,63 +5,81 @@
 from subprocess import call
 
 
-common_sources = '''
+# Sources for the karma app
+karma_sources = '''
   renderer/common/initialize.cc
   renderer/common/render_handler.cc
-'''
-
-karma_sources = '''
   renderer/karma/app.cc
   renderer/karma/handler.cc
   renderer/karma/main.cc
 '''
 
+
+# Sources for the seo app
 seo_sources = '''
+  renderer/common/initialize.cc
+  renderer/common/render_handler.cc
   renderer/seo/app.cc
   renderer/seo/handler.cc
   renderer/seo/main.cc
   renderer/seo/request_handler.cc
 '''
 
+
+# Sources for the helper that generates seo requests
 seo_generator_sources = '''
   seo-generator/main.cc
   proto/seo/request.pb.cc
 '''
 
+
+# Proto files
 protobufs = '''
   proto/seo/request.proto
   proto/seo/response.proto
 '''
 
 
+# Build proto files first directly
 call(['mkdir', '-p', '/renderer/obj'])
 for proto in Split(protobufs):
   print 'Build', proto
   call(['protoc', '--cpp_out=/renderer/obj', '-I/renderer/src', '/renderer/src/' + proto])
 
 
+# Flags for the compiler and linker
 libs = ['cef', 'cef_dll_wrapper', 'glog', 'gflags', 'protobuf']
 flags = ['-Werror', '-Wall']
 include_paths = ['#src', '/cef', '#obj']
 lib_paths = ['/usr/local/lib', '/cef', '/cef/obj.target']
 
 
+# Prepare the environment with the gtk libraries
 env = Environment()
 env.ParseConfig('pkg-config --cflags --libs gtk+-2.0')
 include_paths.append(env['CPPPATH'])
 
 
+# Generates object files from sources, using a cache to avoid repetitions
+# and WARNINGs from scons
+obj_cache = {}
 def create_objs(sources):
-  return [env.Object(source, CPPPATH=include_paths, CPPFLAGS=flags) for source in Split(sources)]
+  objs = []
+  for source in Split(sources):
+    if not source in obj_cache:
+      obj_cache[source] = env.Object(source, CPPPATH=include_paths, CPPFLAGS=flags)
+
+    objs.append(obj_cache[source])
+
+  return objs
 
 
-common_objs = create_objs(common_sources)
+# Prepare the objects of an app and compiles it
+def compile(app, sources):
+  env.Program('#bin/' + app, create_objs(sources), LIBS=libs, LIBPATH=lib_paths)
 
-karma_objs = common_objs + create_objs(karma_sources)
-env.Program('#bin/karma', karma_objs, LIBS=libs, LIBPATH=lib_paths)
 
-seo_objs = common_objs + create_objs(seo_sources)
-env.Program('#bin/seo', seo_objs, LIBS=libs, LIBPATH=lib_paths)
-
-seo_generator_objs = common_objs + create_objs(seo_generator_sources)
-env.Program('#bin/seo-generator', seo_generator_objs, LIBS=libs, LIBPATH=lib_paths)
+# Compile and link binaries
+compile('karma', karma_sources)
+compile('seo', seo_sources)
+compile('seo-generator', seo_generator_sources)

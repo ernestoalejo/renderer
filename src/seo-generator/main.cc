@@ -29,6 +29,8 @@ int main(int argc, char* argv[]) {
     LOG(FATAL) << "failed to write request file";
   }
 
+  LOG(INFO) << "request generated in /tmp/request";
+
   // Shutdown protobuf
   google::protobuf::ShutdownProtobufLibrary();
 

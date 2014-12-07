@@ -1,0 +1,7 @@
+syntax = "proto2";
+
+package seo;
+
+message Request {
+  optional string url = 1;
+}

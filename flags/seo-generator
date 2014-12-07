@@ -1,0 +1,4 @@
+
+# glogs flags
+-logtostderr
+-colorlogtostderr

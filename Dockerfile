@@ -43,7 +43,18 @@ ENV LD_LIBRARY_PATH /cef
 ENV CHROME_DEVEL_SANDBOX /cef/chrome-sandbox
 ENV DISPLAY :100.0
 
+# Add .bashrc commands to the already present file
 ADD provision/.bashrc /tmp/.bashrc
 RUN cat /tmp/.bashrc >> ~/.bashrc
+
+# Install protobuf
+RUN apt-get install -y curl libtool
+RUN cd /tmp && \
+    git clone https://github.com/google/protobuf.git && \
+    cd protobuf && \
+    ./autogen.sh && \
+    ./configure --prefix=/usr && \
+    make && \
+    make install
 
 CMD (Xvfb :100 -ac &) && cd /renderer && /bin/bash

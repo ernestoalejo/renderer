@@ -2,6 +2,8 @@
 # reserved. Use of this source code is governed by a BSD-style license that
 # can be found in the LICENSE file.
 
+from subprocess import call
+
 
 common_sources = '''
   renderer/common/initialize.cc
@@ -21,10 +23,26 @@ seo_sources = '''
   renderer/seo/request_handler.cc
 '''
 
+seo_generator_sources = '''
+  seo-generator/main.cc
+  proto/seo/request.pb.cc
+'''
 
-libs = ['cef', 'cef_dll_wrapper', 'glog', 'gflags']
+protobufs = '''
+  proto/seo/request.proto
+  proto/seo/response.proto
+'''
+
+
+call(['mkdir', '-p', '/renderer/obj'])
+for proto in Split(protobufs):
+  print 'Build', proto
+  call(['protoc', '--cpp_out=/renderer/obj', '-I/renderer/src', '/renderer/src/' + proto])
+
+
+libs = ['cef', 'cef_dll_wrapper', 'glog', 'gflags', 'protobuf']
 flags = ['-Werror', '-Wall']
-include_paths = ['#src', '/cef']
+include_paths = ['#src', '/cef', '#obj']
 lib_paths = ['/usr/local/lib', '/cef', '/cef/obj.target']
 
 
@@ -38,9 +56,12 @@ def create_objs(sources):
 
 
 common_objs = create_objs(common_sources)
+
 karma_objs = common_objs + create_objs(karma_sources)
-seo_objs = common_objs + create_objs(seo_sources)
-
-
 env.Program('#bin/karma', karma_objs, LIBS=libs, LIBPATH=lib_paths)
+
+seo_objs = common_objs + create_objs(seo_sources)
 env.Program('#bin/seo', seo_objs, LIBS=libs, LIBPATH=lib_paths)
+
+seo_generator_objs = common_objs + create_objs(seo_generator_sources)
+env.Program('#bin/seo-generator', seo_generator_objs, LIBS=libs, LIBPATH=lib_paths)

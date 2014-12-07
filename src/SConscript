@@ -18,6 +18,7 @@ karma_sources = '''
 # Sources for the seo app
 seo_sources = '''
   proto/seo/request.pb.cc
+  proto/seo/response.pb.cc
   renderer/common/initialize.cc
   renderer/common/protobufs.cc
   renderer/common/render_handler.cc

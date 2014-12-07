@@ -4,10 +4,15 @@
 
 #include "renderer/seo/handler.h"
 
+#include <iostream>
+
 #include <glog/logging.h>
+#include <google/protobuf/io/zero_copy_stream_impl.h>
 
 #include "base/util.h"
 #include "include/cef_app.h"
+#include "proto/seo/response.pb.h"
+#include "renderer/common/protobufs.h"
 
 
 namespace seo {
@@ -20,10 +25,17 @@ Handler* g_instance = NULL;
 class SourceCodeVisitor : public CefStringVisitor {
 public:
   virtual void Visit(const CefString& source) OVERRIDE {
-    LOG(INFO) << "source obtained";
-    // LOG(INFO) << source.ToString();
+    // Write response
+    seo::Response response;
+    response.set_status(Response_Status_OK);
+    response.set_source_code(source.ToString());
 
-    CefQuitMessageLoop();
+    google::protobuf::io::OstreamOutputStream outputStream(&std::cout);
+    if (!common::WriteDelimitedTo(response, &outputStream)) {
+      LOG(FATAL) << "cannot write response message to stdout";
+    }
+
+    LOG(INFO) << "source obtained";
   }
 
 private:

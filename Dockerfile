@@ -43,4 +43,7 @@ ENV LD_LIBRARY_PATH /cef
 ENV CHROME_DEVEL_SANDBOX /cef/chrome-sandbox
 ENV DISPLAY :100.0
 
+ADD provision/.bashrc /tmp/.bashrc
+RUN cat /tmp/.bashrc >> ~/.bashrc
+
 CMD (Xvfb :100 -ac &) && cd /renderer && /bin/bash

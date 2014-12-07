@@ -12,6 +12,9 @@
 #include "renderer/seo/handler.h"
 
 
+DEFINE_string(url, "", "url to load");
+
+
 namespace seo {
 
 
@@ -29,7 +32,12 @@ void App::OnContextInitialized() {
   window_info.SetAsOffScreen(NULL);
   window_info.SetTransparentPainting(true);
 
-  CefBrowserHost::CreateBrowser(window_info, handler.get(), "http://www.google.com/",
+  std::string url(FLAGS_url);
+  if (url.empty()) {
+    LOG(FATAL) << "the url flag cannot be empty";
+  }
+
+  CefBrowserHost::CreateBrowser(window_info, handler.get(), url.c_str(),
       browser_settings, NULL);
 }
 

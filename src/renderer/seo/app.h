@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
-#ifndef RENDERER_SEO_APP_H_
-#define RENDERER_SEO_APP_H_
+#ifndef RENDERER_SEO_SEO_APP_H_
+#define RENDERER_SEO_SEO_APP_H_
 
 #include "include/cef_app.h"
 
@@ -33,5 +33,5 @@ private:
 }  // namespace seo
 
 
-#endif  // RENDERER_SEO_APP_H_
+#endif  // RENDERER_SEO_SEO_APP_H_
 

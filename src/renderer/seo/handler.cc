@@ -16,6 +16,41 @@ namespace {
 
 Handler* g_instance = NULL;
 
+
+class SourceCodeVisitor : public CefStringVisitor {
+public:
+  virtual void Visit(const CefString& source) OVERRIDE {
+    // LOG(INFO) << "source obtained";
+    LOG(INFO) << source.ToString();
+
+    CefQuitMessageLoop();
+  }
+
+private:
+  IMPLEMENT_REFCOUNTING(SourceCodeVisitor);
+};
+
+
+class SourceCodeDelayed : public CefTask {
+public:
+  SourceCodeDelayed(CefRefPtr<CefBrowser> browser)
+  : browser_(browser) {
+    // empty
+  }
+
+  virtual void Execute() OVERRIDE {
+    LOG(INFO) << "getting source code";
+
+    browser_->GetMainFrame()->GetSource(new SourceCodeVisitor());
+  }
+
+private:
+  CefRefPtr<CefBrowser> browser_;
+
+  IMPLEMENT_REFCOUNTING(SourceCodeDelayed);
+};
+
+
 }  // namespace
 
 
@@ -42,7 +77,7 @@ void Handler::OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
 
   if (!isLoading) {
     LOG(INFO) << "page loaded: " << browser->GetMainFrame()->GetURL().ToString();
-    ExtractSourceCode(browser);
+    CefPostDelayedTask(TID_UI, new SourceCodeDelayed(browser), 500);
   }
 }
 
@@ -57,23 +92,6 @@ void Handler::OnLoadError(CefRefPtr<CefBrowser> browser,
   }
 
   LOG(FATAL) << "error loading (" << errorCode << "): " << errorText.ToString();
-}
-
-void Handler::ExtractSourceCode(CefRefPtr<CefBrowser> browser) {
-  class Visitor : public CefStringVisitor {
-  public:
-    virtual void Visit(const CefString& source) OVERRIDE {
-      LOG(INFO) << "source obtained";
-      // LOG(INFO) << source.ToString();
-
-      CefQuitMessageLoop();
-    }
-
-  private:
-    IMPLEMENT_REFCOUNTING(Visitor);
-  };
-
-  browser->GetMainFrame()->GetSource(new Visitor());
 }
 
 

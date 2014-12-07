@@ -8,10 +8,13 @@
 #include <thread>
 
 #include <glog/logging.h>
+#include <google/protobuf/io/zero_copy_stream_impl.h>
 
 #include "base/util.h"
 #include "include/cef_browser.h"
 #include "include/cef_command_line.h"
+#include "proto/seo/request.pb.h"
+#include "renderer/common/protobufs.h"
 
 
 namespace seo {
@@ -26,27 +29,30 @@ void App::OnContextInitialized() {
 
   handler_ = new Handler(render_handler, request_handler);
 
-  // CefBrowserSettings browser_settings;
-
-  // CefWindowInfo window_info;
-  // window_info.SetAsOffScreen(NULL);
-  // window_info.SetTransparentPainting(true);
-
   std::thread thread(std::bind(&App::ReadRequests, this));
   thread.detach();
 
-  // CefBrowserHost::CreateBrowser(window_info, handler.get(), url.c_str(),
-      // browser_settings, NULL);
 }
 
 
 void App::ReadRequests() {
   LOG(INFO) << "running requests reader";
 
-  std::string size;
-  std::cin >> size;
+  Request message;
+  google::protobuf::io::IstreamInputStream inputStream(&std::cin);
+  if (!common::ReadDelimitedFrom(&inputStream, &message)) {
+    LOG(FATAL) << "cannot read delimited request";
+  }
 
-  LOG(INFO) << "read size: " << size;
+  CefBrowserSettings browser_settings;
+
+  CefWindowInfo window_info;
+  window_info.SetAsOffScreen(NULL);
+  window_info.SetTransparentPainting(true);
+
+  LOG(INFO) << "request url: " << message.url();
+  CefBrowserHost::CreateBrowser(window_info, handler_.get(), message.url(),
+      browser_settings, NULL);
 }
 
 

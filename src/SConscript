@@ -28,8 +28,9 @@ seo_sources = '''
 
 # Sources for the helper that generates seo requests
 seo_generator_sources = '''
-  seo-generator/main.cc
   proto/seo/request.pb.cc
+  renderer/common/protobufs.cc
+  seo-generator/main.cc
 '''
 
 
@@ -49,7 +50,7 @@ for proto in Split(protobufs):
 
 # Flags for the compiler and linker
 libs = ['cef', 'cef_dll_wrapper', 'glog', 'gflags', 'protobuf']
-flags = ['-Werror', '-Wall']
+flags = ['-Werror', '-Wall', '-std=c++11']
 include_paths = ['#src', '/cef', '#obj']
 lib_paths = ['/usr/local/lib', '/cef', '/cef/obj.target']
 

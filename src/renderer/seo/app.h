@@ -7,8 +7,7 @@
 
 #include "include/cef_app.h"
 
-#include "renderer/common/render_handler.h"
-#include "renderer/seo/request_handler.h"
+#include "renderer/seo/handler.h"
 
 
 namespace seo {
@@ -20,11 +19,13 @@ public:
     return this;
   }
 
+  // CefBrowserProcessHandler methods
   virtual void OnContextInitialized() OVERRIDE;
 
 private:
-  CefRefPtr<common::RenderHandler> render_handler_;
-  CefRefPtr<RequestHandler> request_handler_;
+  CefRefPtr<Handler> handler_;
+
+  void ReadRequests();
 
   IMPLEMENT_REFCOUNTING(App);
 };

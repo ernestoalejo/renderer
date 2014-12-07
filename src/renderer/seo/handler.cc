@@ -20,8 +20,8 @@ Handler* g_instance = NULL;
 class SourceCodeVisitor : public CefStringVisitor {
 public:
   virtual void Visit(const CefString& source) OVERRIDE {
-    // LOG(INFO) << "source obtained";
-    LOG(INFO) << source.ToString();
+    LOG(INFO) << "source obtained";
+    // LOG(INFO) << source.ToString();
 
     CefQuitMessageLoop();
   }

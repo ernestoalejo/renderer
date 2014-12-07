@@ -7,7 +7,6 @@
 #include "include/cef_app.h"
 
 
-DEFINE_bool(single_process, false, "Use a single process instead of the CEF original architecture");
 DEFINE_string(locales_dir_path, "locales", "Path to the locales packages");
 DEFINE_string(resources_dir_path, ".", "Path to the cef and devtools pak files");
 
@@ -36,7 +35,6 @@ int InitializeAfterApp(int argc, char* argv[], CefRefPtr<CefApp> app) {
   CefString(&settings.locales_dir_path) = FLAGS_locales_dir_path;
   CefString(&settings.resources_dir_path) = FLAGS_resources_dir_path;
   settings.no_sandbox = true;
-  settings.single_process = FLAGS_single_process;
 
   CefInitialize(main_args, settings, app.get(), NULL);
   CefRunMessageLoop();

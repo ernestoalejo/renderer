@@ -5,8 +5,10 @@
 #include <fstream>
 
 #include <glog/logging.h>
+#include <google/protobuf/io/zero_copy_stream_impl.h>
 
 #include "proto/seo/request.pb.h"
+#include "renderer/common/protobufs.h"
 
 
 int main(int argc, char* argv[]) {
@@ -24,9 +26,10 @@ int main(int argc, char* argv[]) {
   seo::Request request;
   request.set_url("http://www.google.com/");
 
-  std::fstream output("/tmp/request", std::ios::out | std::ios::trunc | std::ios::binary);
-  if (!request.SerializeToOstream(&output)) {
-    LOG(FATAL) << "failed to write request file";
+  std::ofstream output("/tmp/request", std::ios::trunc | std::ios::binary);
+  google::protobuf::io::OstreamOutputStream outputStream(&output);
+  if (!common::WriteDelimitedTo(request, &outputStream)) {
+    LOG(FATAL) << "cannot write message to the output file";
   }
 
   LOG(INFO) << "request generated in /tmp/request";

@@ -4,15 +4,14 @@
 
 #include "renderer/seo/app.h"
 
+#include <iostream>
+#include <thread>
+
 #include <glog/logging.h>
 
 #include "base/util.h"
 #include "include/cef_browser.h"
 #include "include/cef_command_line.h"
-#include "renderer/seo/handler.h"
-
-
-DEFINE_string(url, "", "url to load");
 
 
 namespace seo {
@@ -21,24 +20,33 @@ namespace seo {
 void App::OnContextInitialized() {
   REQUIRE_UI_THREAD();
 
-  render_handler_ = new common::RenderHandler(1900, 800);
-  request_handler_ = new RequestHandler;
-  request_handler_->Initialize();
+  CefRefPtr<common::RenderHandler> render_handler = new common::RenderHandler(1900, 800);
+  CefRefPtr<RequestHandler> request_handler = new RequestHandler;
+  request_handler->Initialize();
 
-  CefRefPtr<Handler> handler(new Handler(render_handler_, request_handler_));
-  CefBrowserSettings browser_settings;
+  handler_ = new Handler(render_handler, request_handler);
 
-  CefWindowInfo window_info;
-  window_info.SetAsOffScreen(NULL);
-  window_info.SetTransparentPainting(true);
+  // CefBrowserSettings browser_settings;
 
-  std::string url(FLAGS_url);
-  if (url.empty()) {
-    LOG(FATAL) << "the url flag cannot be empty";
-  }
+  // CefWindowInfo window_info;
+  // window_info.SetAsOffScreen(NULL);
+  // window_info.SetTransparentPainting(true);
 
-  CefBrowserHost::CreateBrowser(window_info, handler.get(), url.c_str(),
-      browser_settings, NULL);
+  std::thread thread(std::bind(&App::ReadRequests, this));
+  thread.detach();
+
+  // CefBrowserHost::CreateBrowser(window_info, handler.get(), url.c_str(),
+      // browser_settings, NULL);
+}
+
+
+void App::ReadRequests() {
+  LOG(INFO) << "running requests reader";
+
+  std::string size;
+  std::cin >> size;
+
+  LOG(INFO) << "read size: " << size;
 }
 
 

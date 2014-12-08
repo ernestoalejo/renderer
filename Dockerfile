@@ -67,6 +67,8 @@ RUN PATH=$PATH:/go/bin GOPATH=/goprojects go get github.com/golang/protobuf/prot
 RUN mkdir -p /goprojects/src && \
     ln -s /renderer/seo-tester /goprojects/src/seo-tester
 
+RUN apt-get install -y nano
+
 # Add environment variables needed by the app
 ENV LD_LIBRARY_PATH /cef/out/Release:/cef/out/Release/obj.target
 ENV CHROME_DEVEL_SANDBOX /cef/chrome-sandbox

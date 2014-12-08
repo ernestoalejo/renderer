@@ -73,13 +73,17 @@ void Handler::OnLoadError(CefRefPtr<CefBrowser> browser,
                           const CefString& failedUrl) {
   REQUIRE_UI_THREAD();
 
-  switch (errorCode) {
+  switch (int(errorCode)) {
   case ERR_CONNECTION_REFUSED:
     LoadingError_(browser, Response_Status_CONNECTION_REFUSED);
     break;
 
   case ERR_NAME_NOT_RESOLVED:
     LoadingError_(browser, Response_Status_NAME_NOT_RESOLVED);
+    break;
+
+  case -137:  // ERR_NAME_RESOLUTION_FAILED not present
+    LoadingError_(browser, Response_Status_NAME_RESOLUTION_FAILED);
     break;
 
   default:

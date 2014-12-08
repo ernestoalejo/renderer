@@ -16,7 +16,7 @@ import (
 func main() {
 	// cmd := exec.Command()
 	cmd := exec.Command("/bin/bash", "-c",
-		"bin/seo -logtostderr -v 2 "+
+		"bin/seo -logtostderr -v 1 "+
 			"-blacklisted_domains config/blacklisted-domains "+
 			"-locales_dir_path /cef/out/Release/locales "+
 			"-resources_dir_path /cef/out/Release")
@@ -54,7 +54,7 @@ func requester(stdin io.WriteCloser) {
 
 		request := &seo.Request{
 			Id:      proto.Uint64(uint64(i)),
-			Url:     proto.String("http://localhost:8080"),
+			Url:     proto.String("http://www.google.com"),
 			Command: seo.Request_GET_SOURCE_CODE.Enum(),
 		}
 		if err := sendRequest(stdin, request); err != nil {

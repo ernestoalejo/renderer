@@ -7,6 +7,7 @@ message Response {
     OK = 0;
     CONNECTION_REFUSED = 1;
     NAME_NOT_RESOLVED = 2;
+    NAME_RESOLUTION_FAILED = 3;
   }
 
   optional string source_code = 1;

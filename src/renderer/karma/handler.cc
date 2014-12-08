@@ -20,8 +20,7 @@ Handler* g_instance = NULL;
 
 
 Handler::Handler(CefRefPtr<common::RenderHandler> render_handler)
-: render_handler_(render_handler)
-{
+: render_handler_(render_handler) {
   ASSERT(!g_instance);
   g_instance = this;
 }
@@ -40,7 +39,8 @@ void Handler::OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
   REQUIRE_UI_THREAD();
 
   if (!isLoading) {
-    LOG(INFO) << "page loaded: " << browser->GetMainFrame()->GetURL().ToString();
+    LOG(INFO) << "page loaded: " <<
+        browser->GetMainFrame()->GetURL().ToString();
   }
 }
 
@@ -54,8 +54,9 @@ void Handler::OnLoadError(CefRefPtr<CefBrowser> browser,
     LOG(FATAL) << "cannot connect to " << failedUrl.ToString();
   }
 
-  LOG(FATAL) << "error loading (" << errorCode << "): " << errorText.ToString();
+  LOG(FATAL) << "error loading (" << errorCode << "): " <<
+      errorText.ToString();
 }
 
 
-}  // karma
+}  // namespace karma

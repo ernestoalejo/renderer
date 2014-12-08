@@ -14,14 +14,15 @@ namespace karma {
 
 
 class App : public CefApp, public CefBrowserProcessHandler {
-public:
-  virtual CefRefPtr<CefBrowserProcessHandler> GetBrowserProcessHandler() OVERRIDE {
+ public:
+  virtual CefRefPtr<CefBrowserProcessHandler>
+      GetBrowserProcessHandler() OVERRIDE {
     return this;
   }
 
   virtual void OnContextInitialized() OVERRIDE;
 
-private:
+ private:
   CefRefPtr<common::RenderHandler> render_handler_;
 
   IMPLEMENT_REFCOUNTING(App);

@@ -12,7 +12,7 @@ namespace seo {
 
 
 class App : public CefApp, public CefBrowserProcessHandler {
-public:
+ public:
   virtual CefRefPtr<CefBrowserProcessHandler> GetBrowserProcessHandler() OVERRIDE {
     return this;
   }
@@ -20,7 +20,7 @@ public:
   // CefBrowserProcessHandler methods
   virtual void OnContextInitialized() OVERRIDE;
 
-private:
+ private:
   void ReadRequests_();
 
   IMPLEMENT_REFCOUNTING(App);

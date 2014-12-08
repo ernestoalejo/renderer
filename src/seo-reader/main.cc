@@ -4,8 +4,8 @@
 
 #include <iostream>
 
-#include <glog/logging.h>
-#include <google/protobuf/io/zero_copy_stream_impl.h>
+#include "glog/logging.h"
+#include "google/protobuf/io/zero_copy_stream_impl.h"
 
 #include "proto/seo/response.pb.h"
 #include "renderer/common/protobufs.h"
@@ -19,7 +19,7 @@ int main(int argc, char* argv[]) {
   google::InitGoogleLogging(argv[0]);
   google::InstallFailureSignalHandler();
 
-  // Enable gflags  
+  // Enable gflags
   google::ParseCommandLineFlags(&argc, &argv, true);
 
   // Read responses

@@ -4,11 +4,13 @@
 
 #include "renderer/karma/app.h"
 
-#include <glog/logging.h>
+#include <string>
 
-#include "base/util.h"
+#include "glog/logging.h"
 #include "include/cef_browser.h"
 #include "include/cef_command_line.h"
+
+#include "base/util.h"
 #include "renderer/karma/handler.h"
 
 
@@ -24,7 +26,7 @@ void App::OnContextInitialized() {
   render_handler_ = new common::RenderHandler(1900, 800);
 
   CefRefPtr<Handler> handler(new Handler(render_handler_));
-  
+
   CefBrowserSettings browser_settings;
   CefWindowInfo window_info;
 

@@ -12,7 +12,7 @@ namespace seo {
 
 
 class RequestHandler : public CefRequestHandler {
-public:
+ public:
   // CefRequestHandler methods
   virtual bool OnBeforePluginLoad(CefRefPtr<CefBrowser> browser,
                                   const CefString& url,
@@ -28,7 +28,7 @@ public:
 
   void Init();
 
-private:
+ private:
   std::vector<std::string> blacklisted_domains_;
 
   IMPLEMENT_REFCOUNTING(RequestHandler);

@@ -9,8 +9,7 @@ namespace common {
 
 
 RenderHandler::RenderHandler(int width, int height)
-: width_(width), height_(height)
-{
+: width_(width), height_(height) {
   // empty
 }
 

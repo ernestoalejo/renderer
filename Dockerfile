@@ -68,6 +68,8 @@ RUN mkdir -p /goprojects/src && \
     ln -s /renderer/seo-tester /goprojects/src/seo-tester
 
 RUN apt-get install -y nano
+ADD http://google-styleguide.googlecode.com/svn/trunk/cpplint/cpplint.py /usr/bin/cpplint.py
+RUN chmod +x /usr/bin/cpplint.py
 
 # Add environment variables needed by the app
 ENV LD_LIBRARY_PATH /cef/out/Release:/cef/out/Release/obj.target

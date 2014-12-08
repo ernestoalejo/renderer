@@ -4,8 +4,8 @@
 
 #include <iostream>
 
-#include <glog/logging.h>
-#include <google/protobuf/io/zero_copy_stream_impl.h>
+#include "glog/logging.h"
+#include "google/protobuf/io/zero_copy_stream_impl.h"
 
 #include "proto/seo/request.pb.h"
 #include "renderer/common/protobufs.h"
@@ -19,7 +19,7 @@ int main(int argc, char* argv[]) {
   google::InitGoogleLogging(argv[0]);
   google::InstallFailureSignalHandler();
 
-  // Enable gflags  
+  // Enable gflags
   google::ParseCommandLineFlags(&argc, &argv, true);
 
   google::protobuf::io::FileOutputStream output_stream(STDOUT_FILENO);
@@ -29,7 +29,8 @@ int main(int argc, char* argv[]) {
     seo::Request request;
     request.set_id(0);
     request.set_command(seo::Request_Command_GET_SOURCE_CODE);
-    request.set_url("http://magpcss.org/ceforum/apidocs3/projects/(default)/CefBrowserHost.html");
+    request.set_url("http://magpcss.org/ceforum/apidocs3/projects/"
+      "(default)/CefBrowserHost.html");
     if (!common::WriteDelimitedTo(request, &output_stream)) {
       LOG(FATAL) << "cannot write message to the output file";
     }

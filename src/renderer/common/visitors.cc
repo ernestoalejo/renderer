@@ -11,7 +11,7 @@ namespace common {
 namespace {
 
 class StringVisitor : public CefStringVisitor {
-public:
+ public:
   explicit StringVisitor(
       const base::Callback<void(const CefString& source)>& callback)
   : callback_(callback) {
@@ -22,7 +22,7 @@ public:
     callback_.Run(source);
   }
 
-private:
+ private:
   base::Callback<void(const CefString& source)> callback_;
 
   IMPLEMENT_REFCOUNTING(StringVisitor);

@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
-#ifndef RENDERER_RENDER_HANDLER_H_
-#define RENDERER_RENDER_HANDLER_H_
+#ifndef RENDERER_COMMON_RENDER_HANDLER_H_
+#define RENDERER_COMMON_RENDER_HANDLER_H_
 
 #include "include/cef_render_handler.h"
 
@@ -12,7 +12,7 @@ namespace common {
 
 
 class RenderHandler : public CefRenderHandler {
-public:
+ public:
   RenderHandler(int width, int height);
 
   // CefRenderHandler methods
@@ -28,7 +28,7 @@ public:
     // empty
   }
 
-private:
+ private:
   int width_, height_;
 
   IMPLEMENT_REFCOUNTING(RenderHandler);
@@ -38,4 +38,4 @@ private:
 }  // namespace common
 
 
-#endif  // RENDERER_RENDER_HANDLER_H_
+#endif  // RENDERER_COMMON_RENDER_HANDLER_H_

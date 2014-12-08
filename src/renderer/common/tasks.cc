@@ -11,7 +11,7 @@ namespace common {
 namespace {
 
 class Task : public CefTask {
-public:
+ public:
   explicit Task(const base::Callback<void()>& callback)
   : callback_(callback) {
     // empty
@@ -21,7 +21,7 @@ public:
     callback_.Run();
   }
 
-private:
+ private:
   base::Callback<void()> callback_;
 
   IMPLEMENT_REFCOUNTING(Task);

@@ -21,7 +21,7 @@ namespace seo {
 
 class Client : public CefClient,
                 public CefLoadHandler {
-public:
+ public:
   Client(uint64_t id);
 
   // CefClient methods
@@ -46,7 +46,7 @@ public:
 
   void Init();
 
-private:
+ private:
   CefRefPtr<common::RenderHandler> render_handler_;
   CefRefPtr<RequestHandler> request_handler_;
 

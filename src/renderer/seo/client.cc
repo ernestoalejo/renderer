@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
-#include "renderer/seo/handler.h"
+#include "renderer/seo/client.h"
 
 #include <iostream>
 
@@ -29,20 +29,20 @@ base::Lock g_pending_handlers_lock;
 }  // namespace
 
 
-Handler::Handler(uint64_t id)
+Client::Client(uint64_t id)
 : output_stream_(STDOUT_FILENO), id_(id), loading_error_(false) {
   // empty
 }
 
 
-void Handler::Init() {
+void Client::Init() {
   render_handler_ = new common::RenderHandler(1900, 800);
 
   request_handler_ = new RequestHandler();
   request_handler_->Init();
 }
 
-void Handler::OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
+void Client::OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
                                    bool isLoading, bool canGoBack,
                                    bool canGoForward) {
   REQUIRE_UI_THREAD();
@@ -56,12 +56,12 @@ void Handler::OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
         browser->GetMainFrame()->GetURL().ToString();
 
     CefRefPtr<CefTask> task = common::TaskFromCallback(
-        base::Bind(&Handler::GetSourceCodeDelayed_, this, browser));
+        base::Bind(&Client::GetSourceCodeDelayed_, this, browser));
     CefPostDelayedTask(TID_UI, task, 500);
   }
 }
 
-void Handler::OnLoadError(CefRefPtr<CefBrowser> browser,
+void Client::OnLoadError(CefRefPtr<CefBrowser> browser,
                           CefRefPtr<CefFrame> frame,
                           ErrorCode errorCode, const CefString& errorText,
                           const CefString& failedUrl) {
@@ -92,16 +92,16 @@ void Handler::OnLoadError(CefRefPtr<CefBrowser> browser,
 }
 
 
-void Handler::GetSourceCodeDelayed_(CefRefPtr<CefBrowser> browser) {
+void Client::GetSourceCodeDelayed_(CefRefPtr<CefBrowser> browser) {
   VLOG(1) << "getting source code...";
 
   CefRefPtr<CefStringVisitor> visitor = common::StringVisitorFromCallback(
-      base::Bind(&Handler::VisitSourceCode_, this, browser));
+      base::Bind(&Client::VisitSourceCode_, this, browser));
   browser->GetMainFrame()->GetSource(visitor);
 }
 
 
-void Handler::VisitSourceCode_(CefRefPtr<CefBrowser> browser,
+void Client::VisitSourceCode_(CefRefPtr<CefBrowser> browser,
                                const CefString& source) {
   // Reduce the count of pending requests. If we reach zero and we're exiting
   // the app, quit the message loop too
@@ -128,7 +128,7 @@ void Handler::VisitSourceCode_(CefRefPtr<CefBrowser> browser,
 }
 
 
-void Handler::LoadingError_(CefRefPtr<CefBrowser> browser,
+void Client::LoadingError_(CefRefPtr<CefBrowser> browser,
                          Response_Status status) {
   // Reduce the count of pending requests. If we reach zero and we're exiting
   // the app, quit the message loop too
@@ -156,9 +156,9 @@ void Handler::LoadingError_(CefRefPtr<CefBrowser> browser,
 }
 
 
-void Handler::CloseBrowser_(CefRefPtr<CefBrowser> browser) {
+void Client::CloseBrowser_(CefRefPtr<CefBrowser> browser) {
   // Send the close order to the browser window in the correct thread
-  auto callback = base::Bind(&Handler::CloseBrowserUIThread_, this, browser);
+  auto callback = base::Bind(&Client::CloseBrowserUIThread_, this, browser);
   CefPostTask(TID_UI, common::TaskFromCallback(callback));
 
   VLOG(2) << "browser closed; pending requests -> " << g_pending_handlers <<
@@ -169,7 +169,7 @@ void Handler::CloseBrowser_(CefRefPtr<CefBrowser> browser) {
 }
 
 
-void Handler::CloseBrowserUIThread_(CefRefPtr<CefBrowser> browser) {
+void Client::CloseBrowserUIThread_(CefRefPtr<CefBrowser> browser) {
   REQUIRE_UI_THREAD();
 
   browser->GetHost()->CloseBrowser(true);

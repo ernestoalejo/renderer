@@ -19,10 +19,10 @@
 namespace seo {
 
 
-class Handler : public CefClient,
+class Client : public CefClient,
                 public CefLoadHandler {
 public:
-  Handler(uint64_t id);
+  Client(uint64_t id);
 
   // CefClient methods
   virtual CefRefPtr<CefLoadHandler> GetLoadHandler() OVERRIDE {
@@ -66,7 +66,7 @@ private:
   void CloseBrowser_(CefRefPtr<CefBrowser> browser);
   void CloseBrowserUIThread_(CefRefPtr<CefBrowser> browser);
 
-  IMPLEMENT_REFCOUNTING(Handler);
+  IMPLEMENT_REFCOUNTING(Client);
 };
 
 

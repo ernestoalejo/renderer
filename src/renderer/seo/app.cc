@@ -15,6 +15,7 @@
 #include "include/cef_command_line.h"
 #include "proto/seo/request.pb.h"
 #include "renderer/common/protobufs.h"
+#include "renderer/seo/client.h"
 
 
 namespace seo {
@@ -46,8 +47,8 @@ void App::ReadRequests_() {
       return;
     }
 
-    Handler* handler = new Handler(request.id());
-    handler->Init();
+    Client* client = new Client(request.id());
+    client->Init();
     CountNewHandler();
 
     CefBrowserSettings browser_settings;
@@ -55,7 +56,7 @@ void App::ReadRequests_() {
     window_info.windowless_rendering_enabled = true;
 
     LOG(INFO) << "request url: " << request.url();
-    CefBrowserHost::CreateBrowser(window_info, handler, request.url(),
+    CefBrowserHost::CreateBrowser(window_info, client, request.url(),
         browser_settings, NULL);
   }
 }

@@ -25,7 +25,7 @@ seo_sources = '''
   renderer/common/tasks.cc
   renderer/common/visitors.cc
   renderer/seo/app.cc
-  renderer/seo/handler.cc
+  renderer/seo/client.cc
   renderer/seo/main.cc
   renderer/seo/request_handler.cc
 '''

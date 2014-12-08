@@ -7,8 +7,6 @@
 
 #include "include/cef_app.h"
 
-#include "renderer/seo/handler.h"
-
 
 namespace seo {
 

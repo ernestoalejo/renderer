@@ -49,6 +49,7 @@ RUN cd /tmp && \
     make install
 
 # Checkout and compile Go
+RUN apt-get install -y mercurial
 RUN cd / && \
     hg clone -u release-branch.go1.3 https://code.google.com/p/go && \
     cd /go/src && \

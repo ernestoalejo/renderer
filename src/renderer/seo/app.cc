@@ -47,6 +47,7 @@ void App::ReadRequests_() {
     }
 
     Handler* handler = new Handler(request.id());
+    handler->Init();
     CountNewHandler();
 
     CefBrowserSettings browser_settings;

@@ -17,29 +17,6 @@ DEFINE_string(blacklisted_domains, "", "file with a list (one per line) of black
 namespace seo {
 
 
-void RequestHandler::Initialize() {
-  std::string blacklisted_domains(FLAGS_blacklisted_domains);
-  VLOG(2) << "blacklisted domains file: " << blacklisted_domains;
-
-  if (!blacklisted_domains.empty()) {
-    std::ifstream file(blacklisted_domains.c_str());
-    if (!file) {
-      LOG(FATAL) << "cannot find the blacklisted domains file in: " << blacklisted_domains;
-    }
-
-    std::string line;
-    while (std::getline(file, line)) {
-      // Ignore empty lines
-      if (line.empty()) {
-        continue;
-      }
-
-      VLOG(2) << "blacklisted domain: " << line;
-      blacklisted_domains_.push_back(line);
-    }
-  }
-}
-
 bool RequestHandler::OnBeforePluginLoad(CefRefPtr<CefBrowser> browser,
                                         const CefString& url,
                                         const CefString& policy_url,
@@ -82,6 +59,30 @@ void RequestHandler::OnResourceRedirect(CefRefPtr<CefBrowser> browser,
                                         const CefString& old_url,
                                         CefString& new_url) {
   LOG(INFO) << "resource redirect: " << old_url.ToString() << " -> " << new_url.ToString();
+}
+
+
+void RequestHandler::Init() {
+  std::string blacklisted_domains(FLAGS_blacklisted_domains);
+  VLOG(2) << "blacklisted domains file: " << blacklisted_domains;
+
+  if (!blacklisted_domains.empty()) {
+    std::ifstream file(blacklisted_domains.c_str());
+    if (!file) {
+      LOG(FATAL) << "cannot find the blacklisted domains file in: " << blacklisted_domains;
+    }
+
+    std::string line;
+    while (std::getline(file, line)) {
+      // Ignore empty lines
+      if (line.empty()) {
+        continue;
+      }
+
+      VLOG(2) << "blacklisted domain: " << line;
+      blacklisted_domains_.push_back(line);
+    }
+  }
 }
 
 

@@ -21,8 +21,6 @@ namespace seo {
 
 namespace {
 
-Handler* g_instance = NULL;
-
 bool g_exit_all_handlers = false;
 
 int g_pending_handlers = 0;
@@ -32,23 +30,16 @@ base::Lock g_pending_handlers_lock;
 
 
 Handler::Handler(uint64_t id)
-: output_stream_(STDOUT_FILENO), id_(id), loading_error_(false)
-{
-  ASSERT(!g_instance);
-  g_instance = this;
+: output_stream_(STDOUT_FILENO), id_(id), loading_error_(false) {
+  // empty
+}
 
+
+void Handler::Init() {
   render_handler_ = new common::RenderHandler(1900, 800);
 
-  request_handler_ = new RequestHandler;
-  // request_handler_->Initialize();
-}
-
-Handler::~Handler() {
-  g_instance = NULL;
-}
-
-Handler* Handler::GetInstance() {
-  return g_instance;
+  request_handler_ = new RequestHandler();
+  request_handler_->Init();
 }
 
 void Handler::OnLoadingStateChange(CefRefPtr<CefBrowser> browser,

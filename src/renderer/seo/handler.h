@@ -6,6 +6,7 @@
 #define RENDERER_HANDLER_H_
 
 #include <google/protobuf/io/zero_copy_stream_impl.h>
+#include <glog/logging.h>
 
 #include "include/cef_client.h"
 #include "include/base/cef_lock.h"
@@ -22,19 +23,14 @@ class Handler : public CefClient,
                 public CefLoadHandler {
 public:
   Handler(uint64_t id);
-  ~Handler();
 
-  // Provide access to the single global instance of this object.
-  static Handler* GetInstance();
-
+  // CefClient methods
   virtual CefRefPtr<CefLoadHandler> GetLoadHandler() OVERRIDE {
     return this;
   }
-
   virtual CefRefPtr<CefRenderHandler> GetRenderHandler() OVERRIDE {
     return render_handler_;
   }
-
   virtual CefRefPtr<CefRequestHandler> GetRequestHandler() OVERRIDE {
     return request_handler_;
   }
@@ -48,9 +44,11 @@ public:
                            const CefString& errorText,
                            const CefString& failedUrl) OVERRIDE;
 
+  void Init();
+
 private:
-  CefRefPtr<CefRenderHandler> render_handler_;
-  CefRefPtr<CefRequestHandler> request_handler_;
+  CefRefPtr<common::RenderHandler> render_handler_;
+  CefRefPtr<RequestHandler> request_handler_;
 
   google::protobuf::io::FileOutputStream output_stream_;
 

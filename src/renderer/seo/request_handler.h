@@ -26,7 +26,7 @@ public:
                                   const CefString& old_url,
                                   CefString& new_url) OVERRIDE;
 
-  void Initialize();
+  void Init();
 
 private:
   std::vector<std::string> blacklisted_domains_;

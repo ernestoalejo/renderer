@@ -24,13 +24,18 @@ namespace {
 
 Handler* g_instance = NULL;
 
+bool g_exit_all_handlers = false;
+
+int g_pending_handlers = 0;
+base::Lock g_pending_handlers_lock;
+
 }  // namespace
 
 
 Handler::Handler(CefRefPtr<common::RenderHandler> render_handler,
-                 CefRefPtr<RequestHandler> request_handler)
+                 CefRefPtr<RequestHandler> request_handler, uint64_t id)
 : render_handler_(render_handler), request_handler_(request_handler),
-  exit_(false), pending_(0), output_stream_(STDOUT_FILENO)
+  output_stream_(STDOUT_FILENO), id_(id)
 {
   ASSERT(!g_instance);
   g_instance = this;
@@ -50,7 +55,8 @@ void Handler::OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
   REQUIRE_UI_THREAD();
 
   if (!isLoading) {
-    LOG(INFO) << "page loaded: " << browser->GetMainFrame()->GetURL().ToString();
+    LOG(INFO) << "page loaded: " <<
+        browser->GetMainFrame()->GetURL().ToString();
 
     CefRefPtr<CefTask> task = common::TaskFromCallback(
         base::Bind(&Handler::GetSourceCodeDelayed_, this, browser));
@@ -72,26 +78,8 @@ void Handler::OnLoadError(CefRefPtr<CefBrowser> browser,
 }
 
 
-void Handler::CountPendingRequest() {
-  base::AutoLock lock_scope(pending_lock_);
-  pending_++;
-}
-
-
-void Handler::Exit() {
-  base::AutoLock lock_scope(pending_lock_);
-
-  if (pending_ == 0) {
-    CefQuitMessageLoop();
-    return;
-  }
-
-  exit_ = true;
-}
-
-
 void Handler::GetSourceCodeDelayed_(CefRefPtr<CefBrowser> browser) {
-  LOG(INFO) << "getting source code";
+  VLOG(1) << "getting source code...";
 
   CefRefPtr<CefStringVisitor> visitor = common::StringVisitorFromCallback(
       base::Bind(&Handler::VisitSourceCode_, this, browser));
@@ -103,13 +91,14 @@ void Handler::VisitSourceCode_(CefRefPtr<CefBrowser> browser,
                                const CefString& source) {
   // Reduce the count of pending requests. If we reach zero and we're exiting
   // the app, quit the message loop too
-  base::AutoLock lock_scope(pending_lock_);
-  pending_--;
+  base::AutoLock lock_scope(g_pending_handlers_lock);
+  g_pending_handlers--;
 
   // Write response
   seo::Response response;
   response.set_status(Response_Status_OK);
   response.set_source_code(source.ToString());
+  response.set_id(id_);
 
   if (!common::WriteDelimitedTo(response, &output_stream_)) {
     LOG(FATAL) << "cannot write response message to stdout";
@@ -118,15 +107,32 @@ void Handler::VisitSourceCode_(CefRefPtr<CefBrowser> browser,
   // Flush stdout or otherwise some of the content may not appear in the output
   output_stream_.Flush();
 
-  VLOG(1) << "source obtained. closing browser...";
+  LOG(INFO) << "source obtained: " <<
+      browser->GetMainFrame()->GetURL().ToString();
 
-  // browser->GetHost()->CloseBrowser(false /* force_close */);
-
-  VLOG(2) << "browser closed; pending requests -> " << pending_ <<
-      "; exit -> " << exit_;
-  if (pending_ == 0 && exit_) {
+  VLOG(2) << "browser closed; pending requests -> " << g_pending_handlers <<
+      "; exit -> " << g_exit_all_handlers;
+  if (g_pending_handlers == 0 && g_exit_all_handlers) {
     CefQuitMessageLoop();
   }
+}
+
+
+void CountNewHandler() {
+  base::AutoLock lock_scope(g_pending_handlers_lock);
+  g_pending_handlers++;
+}
+
+
+void ExitAllHandlers() {
+  base::AutoLock lock_scope(g_pending_handlers_lock);
+
+  if (g_pending_handlers == 0) {
+    CefQuitMessageLoop();
+    return;
+  }
+
+  g_exit_all_handlers = true;
 }
 
 

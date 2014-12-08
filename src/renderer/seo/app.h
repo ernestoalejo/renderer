@@ -23,7 +23,8 @@ public:
   virtual void OnContextInitialized() OVERRIDE;
 
 private:
-  CefRefPtr<Handler> handler_;
+  CefRefPtr<common::RenderHandler> render_handler_;
+  CefRefPtr<RequestHandler> request_handler_;
 
   void ReadRequests_();
 

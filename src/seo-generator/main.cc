@@ -27,6 +27,7 @@ int main(int argc, char* argv[]) {
   {
     // Write example request
     seo::Request request;
+    request.set_id(0);
     request.set_command(seo::Request_Command_GET_SOURCE_CODE);
     request.set_url("http://magpcss.org/ceforum/apidocs3/projects/(default)/CefBrowserHost.html");
     if (!common::WriteDelimitedTo(request, &output_stream)) {
@@ -37,6 +38,7 @@ int main(int argc, char* argv[]) {
   {
     // Write example request
     seo::Request request;
+    request.set_id(1);
     request.set_command(seo::Request_Command_GET_SOURCE_CODE);
     request.set_url("http://www.google.com/");
     if (!common::WriteDelimitedTo(request, &output_stream)) {
@@ -53,7 +55,7 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  LOG(INFO) << "request generated in /tmp/request";
+  LOG(INFO) << "requests generated";
 
   // Shutdown protobuf
   google::protobuf::ShutdownProtobufLibrary();

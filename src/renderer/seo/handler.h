@@ -21,7 +21,7 @@ class Handler : public CefClient,
                 public CefLoadHandler {
 public:
   Handler(CefRefPtr<common::RenderHandler> render_handler,
-          CefRefPtr<seo::RequestHandler> request_handler);
+          CefRefPtr<seo::RequestHandler> request_handler, uint64_t id);
   ~Handler();
 
   // Provide access to the single global instance of this object.
@@ -48,25 +48,23 @@ public:
                            const CefString& errorText,
                            const CefString& failedUrl) OVERRIDE;
 
-  void CountPendingRequest();
-  void Exit();
-
 private:
   CefRefPtr<CefRenderHandler> render_handler_;
   CefRefPtr<CefRequestHandler> request_handler_;
-  
-  bool exit_;
-
-  int pending_;
-  base::Lock pending_lock_;
 
   google::protobuf::io::FileOutputStream output_stream_;
+
+  uint64_t id_;
 
   void GetSourceCodeDelayed_(CefRefPtr<CefBrowser> browser);
   void VisitSourceCode_(CefRefPtr<CefBrowser> browser, const CefString& source);
 
   IMPLEMENT_REFCOUNTING(Handler);
 };
+
+
+void CountNewHandler();
+void ExitAllHandlers();
 
 
 }  // namespace seo

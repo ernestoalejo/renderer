@@ -23,20 +23,17 @@ namespace seo {
 void App::OnContextInitialized() {
   REQUIRE_UI_THREAD();
 
-  CefRefPtr<common::RenderHandler> render_handler = new common::RenderHandler(1900, 800);
-  CefRefPtr<RequestHandler> request_handler = new RequestHandler;
-  request_handler->Initialize();
-
-  handler_ = new Handler(render_handler, request_handler);
+  render_handler_ = new common::RenderHandler(1900, 800);
+  request_handler_ = new RequestHandler;
+  request_handler_->Initialize();
 
   std::thread thread(std::bind(&App::ReadRequests_, this));
   thread.detach();
-
 }
 
 
 void App::ReadRequests_() {
-  LOG(INFO) << "running requests reader";
+  VLOG(2) << "running requests reader";
 
   google::protobuf::io::IstreamInputStream inputStream(&std::cin);
   while (true) {
@@ -48,17 +45,19 @@ void App::ReadRequests_() {
     VLOG(2) << "read command: " << request.command();
 
     if (request.command() == Request_Command_EXIT) {
-      handler_->Exit();
+      ExitAllHandlers();
       return;
     }
 
-    handler_->CountPendingRequest();
+    Handler* handler = new Handler(render_handler_, request_handler_,
+        request.id());
+    CountNewHandler();
 
     CefBrowserSettings browser_settings;
     CefWindowInfo window_info;
 
     LOG(INFO) << "request url: " << request.url();
-    CefBrowserHost::CreateBrowser(window_info, handler_.get(), request.url(),
+    CefBrowserHost::CreateBrowser(window_info, handler, request.url(),
         browser_settings, NULL);
   }
 }

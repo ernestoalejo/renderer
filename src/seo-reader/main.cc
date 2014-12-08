@@ -37,6 +37,7 @@ int main(int argc, char* argv[]) {
 
     // Log received data
     LOG(INFO) << "=================================================";
+    LOG(INFO) << "response id: " << response.id();
     LOG(INFO) << "response read with status: " << response.status();
     LOG(INFO) << "source code length: " << response.source_code().size();
     LOG(INFO) << "source code start: " << response.source_code().substr(0, 80);

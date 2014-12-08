@@ -2,6 +2,7 @@
 # glogs flags
 -logtostderr
 -colorlogtostderr
+-logbuflevel=-1
 
 # Verbose logging level
 -v=1

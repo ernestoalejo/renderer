@@ -33,18 +33,19 @@ void App::OnContextInitialized() {
 
 
 void App::ReadRequests_() {
-  VLOG(2) << "running requests reader";
+  LOG(INFO) << "waiting for requests...";
 
-  google::protobuf::io::IstreamInputStream inputStream(&std::cin);
+  google::protobuf::io::FileInputStream input_stream(STDIN_FILENO);
   while (true) {
     Request request;
-    if (!common::ReadDelimitedFrom(&inputStream, &request)) {
+    if (!common::ReadDelimitedFrom(&input_stream, &request)) {
       LOG(FATAL) << "cannot read delimited request";
     }
 
     VLOG(2) << "read command: " << request.command();
 
     if (request.command() == Request_Command_EXIT) {
+      LOG(INFO) << "received exit";
       ExitAllHandlers();
       return;
     }

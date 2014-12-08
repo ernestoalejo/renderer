@@ -62,6 +62,11 @@ RUN 7za x /tmp/cef.7z && \
     cd /cef && \
     make BUILDTYPE=Release
 
+# Install goprotobuf & other Go goodies
+RUN PATH=$PATH:/go/bin GOPATH=/goprojects go get github.com/golang/protobuf/proto github.com/golang/protobuf/protoc-gen-go
+RUN mkdir -p /goprojects/src && \
+    ln -s /renderer/seo-tester /goprojects/src/seo-tester
+
 # Add environment variables needed by the app
 ENV LD_LIBRARY_PATH /cef/out/Release:/cef/out/Release/obj.target
 ENV CHROME_DEVEL_SANDBOX /cef/chrome-sandbox

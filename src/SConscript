@@ -61,9 +61,10 @@ call(['ln', '-s', '/cef/out/Release/icudtl.dat', 'bin/icudtl.dat'])
 
 # Build proto files first directly
 call(['mkdir', '-p', '/renderer/obj'])
+call(['mkdir', '-p', '/goprojects/src'])
 for proto in Split(protobufs):
   print 'Build', proto
-  call(['protoc', '--cpp_out=/renderer/obj', '-I/renderer/src', '/renderer/src/' + proto])
+  call(['protoc', '--cpp_out=/renderer/obj', '--go_out=/goprojects/src', '-I/renderer/src', '/renderer/src/' + proto])
 
 
 # Flags for the compiler and linker

@@ -12,7 +12,6 @@
 
 #include "base/util.h"
 #include "include/cef_app.h"
-#include "proto/seo/response.pb.h"
 #include "renderer/common/protobufs.h"
 #include "renderer/common/visitors.h"
 #include "renderer/common/tasks.h"
@@ -35,7 +34,7 @@ base::Lock g_pending_handlers_lock;
 Handler::Handler(CefRefPtr<common::RenderHandler> render_handler,
                  CefRefPtr<RequestHandler> request_handler, uint64_t id)
 : render_handler_(render_handler), request_handler_(request_handler),
-  output_stream_(STDOUT_FILENO), id_(id)
+  output_stream_(STDOUT_FILENO), id_(id), loading_error_(false)
 {
   ASSERT(!g_instance);
   g_instance = this;
@@ -54,6 +53,10 @@ void Handler::OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
                                    bool canGoForward) {
   REQUIRE_UI_THREAD();
 
+  if (loading_error_) {
+    return;
+  }
+
   if (!isLoading) {
     LOG(INFO) << "page loaded: " <<
         browser->GetMainFrame()->GetURL().ToString();
@@ -70,11 +73,18 @@ void Handler::OnLoadError(CefRefPtr<CefBrowser> browser,
                           const CefString& failedUrl) {
   REQUIRE_UI_THREAD();
 
-  if (errorCode == ERR_CONNECTION_REFUSED) {
-    LOG(FATAL) << "cannot connect to " << failedUrl.ToString();
-  }
+  switch (errorCode) {
+  case ERR_CONNECTION_REFUSED:
+    LoadingError_(browser, Response_Status_CONNECTION_REFUSED);
+    break;
 
-  LOG(FATAL) << "error loading (" << errorCode << "): " << errorText.ToString();
+  case ERR_NAME_NOT_RESOLVED:
+    LoadingError_(browser, Response_Status_NAME_NOT_RESOLVED);
+    break;
+
+  default:
+    LOG(FATAL) << "error loading (" << errorCode << "): " << errorText.ToString();
+  }
 }
 
 
@@ -110,8 +120,41 @@ void Handler::VisitSourceCode_(CefRefPtr<CefBrowser> browser,
   LOG(INFO) << "source obtained: " <<
       browser->GetMainFrame()->GetURL().ToString();
 
+  CloseBrowser_(browser);
+}
+
+
+void Handler::LoadingError_(CefRefPtr<CefBrowser> browser,
+                         Response_Status status) {
+  // Reduce the count of pending requests. If we reach zero and we're exiting
+  // the app, quit the message loop too
+  base::AutoLock lock_scope(g_pending_handlers_lock);
+  g_pending_handlers--;
+
+  // Write response
+  seo::Response response;
+  response.set_status(status);
+  response.set_id(id_);
+
+  if (!common::WriteDelimitedTo(response, &output_stream_)) {
+    LOG(FATAL) << "cannot write response message to stdout";
+  }
+
+  // Flush stdout or otherwise some of the content may not appear in the output
+  output_stream_.Flush();
+
+  // Signal the loading error internally and by stderr
+  LOG(ERROR) << "load error: " << status;
+  loading_error_ = true;
+
+  // Close the browser process
+  CloseBrowser_(browser);
+}
+
+
+void Handler::CloseBrowser_(CefRefPtr<CefBrowser> browser) {
   // Send the close order to the browser window in the correct thread
-  auto callback = base::Bind(&Handler::CloseBrowser_, this, browser);
+  auto callback = base::Bind(&Handler::CloseBrowserUIThread_, this, browser);
   CefPostTask(TID_UI, common::TaskFromCallback(callback));
 
   VLOG(2) << "browser closed; pending requests -> " << g_pending_handlers <<
@@ -122,7 +165,7 @@ void Handler::VisitSourceCode_(CefRefPtr<CefBrowser> browser,
 }
 
 
-void Handler::CloseBrowser_(CefRefPtr<CefBrowser> browser) {
+void Handler::CloseBrowserUIThread_(CefRefPtr<CefBrowser> browser) {
   REQUIRE_UI_THREAD();
 
   browser->GetHost()->CloseBrowser(true);
@@ -138,8 +181,10 @@ void CountNewHandler() {
 void ExitAllHandlers() {
   base::AutoLock lock_scope(g_pending_handlers_lock);
 
+  VLOG(2) << "exit all handlers; pending requests -> " << g_pending_handlers;
   if (g_pending_handlers == 0) {
-    CefQuitMessageLoop();
+    CefPostTask(TID_UI,
+        common::TaskFromCallback(base::Bind(&CefQuitMessageLoop)));
     return;
   }
 

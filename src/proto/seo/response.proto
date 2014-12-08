@@ -5,7 +5,8 @@ package seo;
 message Response {
   enum Status {
     OK = 0;
-    CONNECTION_ERROR = 1;
+    CONNECTION_REFUSED = 1;
+    NAME_NOT_RESOLVED = 2;
   }
 
   optional string source_code = 1;

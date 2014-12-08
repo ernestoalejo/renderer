@@ -16,7 +16,7 @@ import (
 func main() {
 	// cmd := exec.Command()
 	cmd := exec.Command("/bin/bash", "-c",
-		"bin/seo -logtostderr -v 1 "+
+		"bin/seo -logtostderr -v 2 "+
 			"-blacklisted_domains config/blacklisted-domains "+
 			"-locales_dir_path /cef/out/Release/locales "+
 			"-resources_dir_path /cef/out/Release")
@@ -49,19 +49,18 @@ func main() {
 }
 
 func requester(stdin io.WriteCloser) {
-	for i := 0; i < 50; i++ {
+	for i := 0; i < 1; i++ {
 		log.Println("Sending", i)
 
 		request := &seo.Request{
 			Id:      proto.Uint64(uint64(i)),
-			Url:     proto.String("http://www.google.com/"),
+			Url:     proto.String("http://localhost:8080"),
 			Command: seo.Request_GET_SOURCE_CODE.Enum(),
 		}
 		if err := sendRequest(stdin, request); err != nil {
 			log.Fatal(err)
 		}
 
-		// _ = time.Sleep
 		time.Sleep(3 * time.Second)
 	}
 
@@ -76,7 +75,7 @@ func requester(stdin io.WriteCloser) {
 }
 
 func sendRequest(stdin io.WriteCloser, request *seo.Request) error {
-	log.Println("send request; command: ", request.Command)
+	log.Println("send request; command:", request.Command)
 	data, err := proto.Marshal(request)
 	if err != nil {
 		return err
@@ -123,6 +122,8 @@ func reader(stdout io.ReadCloser) {
 
 		log.Println("id:", response.GetId())
 		log.Println("status:", response.GetStatus())
-		log.Println("source code start:", response.GetSourceCode()[:80])
+		if response.GetStatus() == seo.Response_OK {
+			log.Println("source code start:", response.GetSourceCode()[:80])
+		}
 	}
 }

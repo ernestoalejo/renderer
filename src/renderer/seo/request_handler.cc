@@ -51,6 +51,14 @@ bool RequestHandler::OnBeforePluginLoad(CefRefPtr<CefBrowser> browser,
 bool RequestHandler::OnBeforeResourceLoad(CefRefPtr<CefBrowser> browser,
                                     CefRefPtr<CefFrame> frame,
                                     CefRefPtr<CefRequest> request) {
+  auto rt = request->GetResourceType();
+  if (rt == RT_STYLESHEET || rt == RT_IMAGE || rt == RT_FONT_RESOURCE ||
+      rt == RT_FAVICON) {
+    VLOG(1) << "blocked resource by type (" << rt << "): " <<
+        request->GetURL().ToString();
+    return true;
+  }
+
   CefURLParts parts;
   bool valid = CefParseURL(request->GetURL(), parts);
   DCHECK(valid);
@@ -58,7 +66,8 @@ bool RequestHandler::OnBeforeResourceLoad(CefRefPtr<CefBrowser> browser,
   CefString host(&parts.host);
   for (unsigned i = 0; i < blacklisted_domains_.size(); ++i) {
     if (blacklisted_domains_[i] == host.ToString()) {
-      VLOG(1) << "blocked resource: " << request->GetURL().ToString();
+      VLOG(1) << "blocked resource by blacklist: " <<
+          request->GetURL().ToString();
       return true;
     }
   }
@@ -66,6 +75,13 @@ bool RequestHandler::OnBeforeResourceLoad(CefRefPtr<CefBrowser> browser,
   VLOG(1) << "resource request: " << request->GetURL().ToString();
 
   return false;
+}
+
+void RequestHandler::OnResourceRedirect(CefRefPtr<CefBrowser> browser,
+                                        CefRefPtr<CefFrame> frame,
+                                        const CefString& old_url,
+                                        CefString& new_url) {
+  LOG(INFO) << "resource redirect: " << old_url.ToString() << " -> " << new_url.ToString();
 }
 
 

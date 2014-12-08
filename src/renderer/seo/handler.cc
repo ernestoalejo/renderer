@@ -82,6 +82,12 @@ void Handler::OnLoadError(CefRefPtr<CefBrowser> browser,
     LoadingError_(browser, Response_Status_NAME_NOT_RESOLVED);
     break;
 
+  case ERR_ABORTED:
+    // Aborted means probably an iframe with a origin we blacklisted or
+    // something like that (as there is no UI where the user can "abort" the
+    // request). Ignore the error directly.
+    break;
+
   case -137:  // ERR_NAME_RESOLUTION_FAILED not present
     LoadingError_(browser, Response_Status_NAME_RESOLUTION_FAILED);
     break;

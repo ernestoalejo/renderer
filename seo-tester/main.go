@@ -54,7 +54,7 @@ func requester(stdin io.WriteCloser) {
 
 		request := &seo.Request{
 			Id:      proto.Uint64(uint64(i)),
-			Url:     proto.String("http://www.google.com"),
+			Url:     proto.String("http://www.laovejaverde.com/"),
 			Command: seo.Request_GET_SOURCE_CODE.Enum(),
 		}
 		if err := sendRequest(stdin, request); err != nil {

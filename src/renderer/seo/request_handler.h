@@ -21,6 +21,10 @@ public:
   virtual bool OnBeforeResourceLoad(CefRefPtr<CefBrowser> browser,
                                     CefRefPtr<CefFrame> frame,
                                     CefRefPtr<CefRequest> request);
+  virtual void OnResourceRedirect(CefRefPtr<CefBrowser> browser,
+                                  CefRefPtr<CefFrame> frame,
+                                  const CefString& old_url,
+                                  CefString& new_url) OVERRIDE;
 
   void Initialize();
 

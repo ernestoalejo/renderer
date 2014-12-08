@@ -10,5 +10,5 @@
 -blacklisted_domains=config/blacklisted-domains
 
 # This files have a special location in development
--locales_dir_path=/cef/locales
--resources_dir_path=/cef
+-locales_dir_path=/cef/out/Release/locales
+-resources_dir_path=/cef/out/Release

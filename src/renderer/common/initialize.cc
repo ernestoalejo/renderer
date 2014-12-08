@@ -35,6 +35,7 @@ int InitializeAfterApp(int argc, char* argv[], CefRefPtr<CefApp> app) {
   CefString(&settings.locales_dir_path) = FLAGS_locales_dir_path;
   CefString(&settings.resources_dir_path) = FLAGS_resources_dir_path;
   settings.no_sandbox = true;
+  settings.windowless_rendering_enabled = true;
 
   CefInitialize(main_args, settings, app.get(), NULL);
   CefRunMessageLoop();

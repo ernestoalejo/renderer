@@ -29,30 +29,38 @@ void App::OnContextInitialized() {
 
   handler_ = new Handler(render_handler, request_handler);
 
-  std::thread thread(std::bind(&App::ReadRequests, this));
+  std::thread thread(std::bind(&App::ReadRequests_, this));
   thread.detach();
 
 }
 
 
-void App::ReadRequests() {
+void App::ReadRequests_() {
   LOG(INFO) << "running requests reader";
 
-  Request message;
   google::protobuf::io::IstreamInputStream inputStream(&std::cin);
-  if (!common::ReadDelimitedFrom(&inputStream, &message)) {
-    LOG(FATAL) << "cannot read delimited request";
+  while (true) {
+    Request request;
+    if (!common::ReadDelimitedFrom(&inputStream, &request)) {
+      LOG(FATAL) << "cannot read delimited request";
+    }
+
+    VLOG(2) << "read command: " << request.command();
+
+    if (request.command() == Request_Command_EXIT) {
+      handler_->Exit();
+      return;
+    }
+
+    handler_->CountPendingRequest();
+
+    CefBrowserSettings browser_settings;
+    CefWindowInfo window_info;
+
+    LOG(INFO) << "request url: " << request.url();
+    CefBrowserHost::CreateBrowser(window_info, handler_.get(), request.url(),
+        browser_settings, NULL);
   }
-
-  CefBrowserSettings browser_settings;
-
-  CefWindowInfo window_info;
-  window_info.SetAsOffScreen(NULL);
-  window_info.SetTransparentPainting(true);
-
-  LOG(INFO) << "request url: " << message.url();
-  CefBrowserHost::CreateBrowser(window_info, handler_.get(), message.url(),
-      browser_settings, NULL);
 }
 
 

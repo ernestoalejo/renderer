@@ -24,11 +24,9 @@ void App::OnContextInitialized() {
   render_handler_ = new common::RenderHandler(1900, 800);
 
   CefRefPtr<Handler> handler(new Handler(render_handler_));
+  
   CefBrowserSettings browser_settings;
-
   CefWindowInfo window_info;
-  window_info.SetAsOffScreen(NULL);
-  window_info.SetTransparentPainting(true);
 
   std::string url(FLAGS_url);
   if (url.empty()) {

@@ -3,5 +3,11 @@ syntax = "proto2";
 package seo;
 
 message Request {
+  enum Command {
+    GET_SOURCE_CODE = 0;
+    EXIT = 1;
+  }
+
   optional string url = 1;
+  optional Command command = 2;
 }

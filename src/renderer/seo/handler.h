@@ -6,6 +6,7 @@
 #define RENDERER_HANDLER_H_
 
 #include "include/cef_client.h"
+#include "include/base/cef_lock.h"
 
 #include "renderer/common/render_handler.h"
 #include "renderer/seo/request_handler.h"
@@ -45,9 +46,20 @@ public:
                            const CefString& errorText,
                            const CefString& failedUrl) OVERRIDE;
 
+  void CountPendingRequest();
+  void Exit();
+
 private:
   CefRefPtr<CefRenderHandler> render_handler_;
   CefRefPtr<CefRequestHandler> request_handler_;
+  
+  bool exit_;
+
+  int pending_;
+  base::Lock pending_lock_;
+
+  void GetSourceCodeDelayed_(CefRefPtr<CefBrowser> browser);
+  void VisitSourceCode_(const CefString& source);
 
   IMPLEMENT_REFCOUNTING(Handler);
 };

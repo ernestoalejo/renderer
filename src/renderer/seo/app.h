@@ -25,7 +25,7 @@ public:
 private:
   CefRefPtr<Handler> handler_;
 
-  void ReadRequests();
+  void ReadRequests_();
 
   IMPLEMENT_REFCOUNTING(App);
 };

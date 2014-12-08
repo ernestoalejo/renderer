@@ -22,6 +22,8 @@ seo_sources = '''
   renderer/common/initialize.cc
   renderer/common/protobufs.cc
   renderer/common/render_handler.cc
+  renderer/common/tasks.cc
+  renderer/common/visitors.cc
   renderer/seo/app.cc
   renderer/seo/handler.cc
   renderer/seo/main.cc
@@ -37,11 +39,24 @@ seo_generator_sources = '''
 '''
 
 
+# Sources for the helper that reads seo reads
+seo_reader_sources = '''
+  proto/seo/response.pb.cc
+  renderer/common/protobufs.cc
+  seo-reader/main.cc
+'''
+
+
 # Proto files
 protobufs = '''
   proto/seo/request.proto
   proto/seo/response.proto
 '''
+
+
+# Prepare bin folder with a link to a mmap-ped data file
+call(['mkdir', '-p', 'bin'])
+call(['ln', '-s', '/cef/out/Release/icudtl.dat', 'bin/icudtl.dat'])
 
 
 # Build proto files first directly
@@ -52,10 +67,10 @@ for proto in Split(protobufs):
 
 
 # Flags for the compiler and linker
-libs = ['cef', 'cef_dll_wrapper', 'glog', 'gflags', 'protobuf']
-flags = ['-Werror', '-Wall', '-std=c++11']
+libs = ['cef_dll_wrapper', 'cef', 'glog', 'gflags', 'protobuf']
+flags = ['-Werror', '-Wall', '-std=c++11', '-DNDEBUG']
 include_paths = ['#src', '/cef', '#obj']
-lib_paths = ['/usr/local/lib', '/cef', '/cef/obj.target']
+lib_paths = ['/usr/local/lib', '/cef/out/Release', '/cef/out/Release/obj.target']
 
 
 # Prepare the environment with the gtk libraries
@@ -87,3 +102,4 @@ def compile(app, sources):
 compile('karma', karma_sources)
 compile('seo', seo_sources)
 compile('seo-generator', seo_generator_sources)
+compile('seo-reader', seo_reader_sources)

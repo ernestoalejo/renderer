@@ -34,15 +34,6 @@ RUN svn checkout http://google-glog.googlecode.com/svn/trunk/ google-glog && \
     make && \
     make install
 
-# Download CEF from my own public version and extract it
-ADD https://googledrive.com/host/0B-unE3_O4B0uSWFYdEJZa1hEQmc/cef.tar.gz /tmp/cef.tar.gz
-RUN tar -zxvf /tmp/cef.tar.gz
-
-# Add environment variables needed by the app
-ENV LD_LIBRARY_PATH /cef
-ENV CHROME_DEVEL_SANDBOX /cef/chrome-sandbox
-ENV DISPLAY :100.0
-
 # Add .bashrc commands to the already present file
 ADD provision/.bashrc /tmp/.bashrc
 RUN cat /tmp/.bashrc >> ~/.bashrc
@@ -56,5 +47,17 @@ RUN cd /tmp && \
     ./configure --prefix=/usr && \
     make && \
     make install
+
+# Download CEF from my own public version and extract it
+ADD https://googledrive.com/host/0B-unE3_O4B0uSWFYdEJZa1hEQmc/cef_binary_3.2171.1949_linux64.7z /tmp/cef.7z
+RUN 7za x /tmp/cef.7z && \
+    mv cef_binary_3.2171.1949_linux64 cef && \
+    cd /cef && \
+    make BUILDTYPE=Release
+
+# Add environment variables needed by the app
+ENV LD_LIBRARY_PATH /cef/out/Release:/cef/out/Release/obj.target
+ENV CHROME_DEVEL_SANDBOX /cef/chrome-sandbox
+ENV DISPLAY :100.0
 
 CMD (Xvfb :100 -ac &) && cd /renderer && /bin/bash

@@ -33,10 +33,22 @@ cmd/docker/run.sh
 Build & run dev app
 -------------------
 
-Once we're inside the docker image:
+Once we're inside the docker image we can build the binaries:
 
 ```shell
-scons && bin/renderer -flagfile flags/karma
+scons
+```
+
+Test the karma app:
+
+```shell
+bin/karma -flagfile flags/karma
+```
+
+Or test the seo app:
+
+```shell
+cmd/run/test-seo.sh
 ```
 
 
@@ -44,7 +56,9 @@ Prepare the packages
 --------------------
 
 ```shell
-cmd/pack/linux64.sh 0.1.0
+cmd/pack/linux64.sh VERSION
 ```
 
-Then the package should be uploaded to Drive.
+where *VERSION* uses semver.
+
+Then the package should be uploaded to a new release of Github.

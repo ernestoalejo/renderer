@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
-#include <fstream>
+#include <iostream>
 
 #include <glog/logging.h>
 #include <google/protobuf/io/zero_copy_stream_impl.h>
@@ -22,14 +22,25 @@ int main(int argc, char* argv[]) {
   // Enable gflags  
   google::ParseCommandLineFlags(&argc, &argv, true);
 
-  // Write example request
-  seo::Request request;
-  request.set_url("http://www.google.com/");
+  google::protobuf::io::OstreamOutputStream outputStream(&std::cout);
 
-  std::ofstream output("/tmp/request", std::ios::trunc | std::ios::binary);
-  google::protobuf::io::OstreamOutputStream outputStream(&output);
-  if (!common::WriteDelimitedTo(request, &outputStream)) {
-    LOG(FATAL) << "cannot write message to the output file";
+  {
+    // Write example request
+    seo::Request request;
+    request.set_command(seo::Request_Command_GET_SOURCE_CODE);
+    request.set_url("http://www.google.com/");
+    if (!common::WriteDelimitedTo(request, &outputStream)) {
+      LOG(FATAL) << "cannot write message to the output file";
+    }
+  }
+
+  {
+    // Write exit request
+    seo::Request request;
+    request.set_command(seo::Request_Command_EXIT);
+    if (!common::WriteDelimitedTo(request, &outputStream)) {
+      LOG(FATAL) << "cannot write message to the output file";
+    }
   }
 
   LOG(INFO) << "request generated in /tmp/request";

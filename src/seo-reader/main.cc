@@ -23,15 +23,25 @@ int main(int argc, char* argv[]) {
   google::ParseCommandLineFlags(&argc, &argv, true);
 
   // Read responses
-  seo::Response response;
-  google::protobuf::io::IstreamInputStream inputStream(&std::cin);
-  if (!common::ReadDelimitedFrom(&inputStream, &response)) {
-    LOG(FATAL) << "cannot read delimited request";
-  }
+  google::protobuf::io::FileInputStream input_stream(STDIN_FILENO);
+  while (true) {
+    seo::Response response;
+    if (!common::ReadDelimitedFrom(&input_stream, &response)) {
+      // EOF is not a real error
+      if (fgetc(stdin) == EOF) {
+        break;
+      }
 
-  // Log received data
-  LOG(INFO) << "response read with status: " << response.status();
-  LOG(INFO) << "source code length: " << response.source_code();
+      LOG(FATAL) << "cannot read delimited request";
+    }
+
+    // Log received data
+    LOG(INFO) << "=================================================";
+    LOG(INFO) << "response read with status: " << response.status();
+    LOG(INFO) << "source code length: " << response.source_code().size();
+    LOG(INFO) << "source code start: " << response.source_code().substr(0, 80);
+    LOG(INFO) << "=================================================";
+  }
 
   // Shutdown protobuf
   google::protobuf::ShutdownProtobufLibrary();

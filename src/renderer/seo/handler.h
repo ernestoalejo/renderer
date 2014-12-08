@@ -5,6 +5,8 @@
 #ifndef RENDERER_HANDLER_H_
 #define RENDERER_HANDLER_H_
 
+#include <google/protobuf/io/zero_copy_stream_impl.h>
+
 #include "include/cef_client.h"
 #include "include/base/cef_lock.h"
 
@@ -58,8 +60,10 @@ private:
   int pending_;
   base::Lock pending_lock_;
 
+  google::protobuf::io::FileOutputStream output_stream_;
+
   void GetSourceCodeDelayed_(CefRefPtr<CefBrowser> browser);
-  void VisitSourceCode_(const CefString& source);
+  void VisitSourceCode_(CefRefPtr<CefBrowser> browser, const CefString& source);
 
   IMPLEMENT_REFCOUNTING(Handler);
 };

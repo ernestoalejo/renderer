@@ -22,14 +22,24 @@ int main(int argc, char* argv[]) {
   // Enable gflags  
   google::ParseCommandLineFlags(&argc, &argv, true);
 
-  google::protobuf::io::OstreamOutputStream outputStream(&std::cout);
+  google::protobuf::io::OstreamOutputStream output_stream(&std::cout);
+
+  {
+    // Write example request
+    seo::Request request;
+    request.set_command(seo::Request_Command_GET_SOURCE_CODE);
+    request.set_url("http://magpcss.org/ceforum/apidocs3/projects/(default)/CefBrowserHost.html");
+    if (!common::WriteDelimitedTo(request, &output_stream)) {
+      LOG(FATAL) << "cannot write message to the output file";
+    }
+  }
 
   {
     // Write example request
     seo::Request request;
     request.set_command(seo::Request_Command_GET_SOURCE_CODE);
     request.set_url("http://www.google.com/");
-    if (!common::WriteDelimitedTo(request, &outputStream)) {
+    if (!common::WriteDelimitedTo(request, &output_stream)) {
       LOG(FATAL) << "cannot write message to the output file";
     }
   }
@@ -38,7 +48,7 @@ int main(int argc, char* argv[]) {
     // Write exit request
     seo::Request request;
     request.set_command(seo::Request_Command_EXIT);
-    if (!common::WriteDelimitedTo(request, &outputStream)) {
+    if (!common::WriteDelimitedTo(request, &output_stream)) {
       LOG(FATAL) << "cannot write message to the output file";
     }
   }

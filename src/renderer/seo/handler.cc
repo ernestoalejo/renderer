@@ -7,7 +7,6 @@
 #include <iostream>
 
 #include <glog/logging.h>
-#include <google/protobuf/io/zero_copy_stream_impl.h>
 
 #include "include/base/cef_bind.h"
 
@@ -31,7 +30,7 @@ Handler* g_instance = NULL;
 Handler::Handler(CefRefPtr<common::RenderHandler> render_handler,
                  CefRefPtr<RequestHandler> request_handler)
 : render_handler_(render_handler), request_handler_(request_handler),
-  exit_(false), pending_(0)
+  exit_(false), pending_(0), output_stream_(STDOUT_FILENO)
 {
   ASSERT(!g_instance);
   g_instance = this;
@@ -95,34 +94,40 @@ void Handler::GetSourceCodeDelayed_(CefRefPtr<CefBrowser> browser) {
   LOG(INFO) << "getting source code";
 
   CefRefPtr<CefStringVisitor> visitor = common::StringVisitorFromCallback(
-      base::Bind(&Handler::VisitSourceCode_, this));
+      base::Bind(&Handler::VisitSourceCode_, this, browser));
   browser->GetMainFrame()->GetSource(visitor);
 }
 
 
-void Handler::VisitSourceCode_(const CefString& source) {
-  LOG(INFO) << source.ToString();
+void Handler::VisitSourceCode_(CefRefPtr<CefBrowser> browser,
+                               const CefString& source) {
+  // Reduce the count of pending requests. If we reach zero and we're exiting
+  // the app, quit the message loop too
+  base::AutoLock lock_scope(pending_lock_);
+  pending_--;
+
+  // Write response
+  seo::Response response;
+  response.set_status(Response_Status_OK);
+  response.set_source_code(source.ToString());
+
+  if (!common::WriteDelimitedTo(response, &output_stream_)) {
+    LOG(FATAL) << "cannot write response message to stdout";
+  }
+
+  // Flush stdout or otherwise some of the content may not appear in the output
+  output_stream_.Flush();
+
+  VLOG(1) << "source obtained. closing browser...";
+
+  // browser->GetHost()->CloseBrowser(false /* force_close */);
+
+  VLOG(2) << "browser closed; pending requests -> " << pending_ <<
+      "; exit -> " << exit_;
+  if (pending_ == 0 && exit_) {
+    CefQuitMessageLoop();
+  }
 }
-
-// class SourceCodeVisitor : public CefStringVisitor {
-// public:
-//   virtual void Visit(const CefString& source) OVERRIDE {
-//     // Write response
-//     seo::Response response;
-//     response.set_status(Response_Status_OK);
-//     response.set_source_code(source.ToString());
-
-//     google::protobuf::io::OstreamOutputStream outputStream(&std::cout);
-//     if (!common::WriteDelimitedTo(response, &outputStream)) {
-//       LOG(FATAL) << "cannot write response message to stdout";
-//     }
-
-//     LOG(INFO) << "source obtained";
-//   }
-
-// private:
-//   IMPLEMENT_REFCOUNTING(SourceCodeVisitor);
-// };
 
 
 }  // namespace seo

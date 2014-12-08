@@ -11,8 +11,8 @@ namespace common {
 
 
 bool WriteDelimitedTo(const google::protobuf::MessageLite& message,
-                      google::protobuf::io::ZeroCopyOutputStream* rawOutput) {
-  google::protobuf::io::CodedOutputStream output(rawOutput);
+                      google::protobuf::io::ZeroCopyOutputStream* raw_output) {
+  google::protobuf::io::CodedOutputStream output(raw_output);
 
   const int size = message.ByteSize();
   output.WriteVarint32(size);
@@ -34,9 +34,9 @@ bool WriteDelimitedTo(const google::protobuf::MessageLite& message,
 }
 
 
-bool ReadDelimitedFrom(google::protobuf::io::ZeroCopyInputStream* rawInput,
+bool ReadDelimitedFrom(google::protobuf::io::ZeroCopyInputStream* raw_input,
                        google::protobuf::MessageLite* message) {
-  google::protobuf::io::CodedInputStream input(rawInput);
+  google::protobuf::io::CodedInputStream input(raw_input);
 
   // Limit the stream to the size prepended to the message
   uint32_t size;

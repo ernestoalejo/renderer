@@ -12,9 +12,9 @@ namespace common {
 
 
 bool WriteDelimitedTo(const google::protobuf::MessageLite& message,
-                      google::protobuf::io::ZeroCopyOutputStream* rawOutput);
+                      google::protobuf::io::ZeroCopyOutputStream* raw_output);
 
-bool ReadDelimitedFrom(google::protobuf::io::ZeroCopyInputStream* rawInput,
+bool ReadDelimitedFrom(google::protobuf::io::ZeroCopyInputStream* raw_input,
                        google::protobuf::MessageLite* message);
 
 }  // namespace common

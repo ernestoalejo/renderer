@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
   // Enable gflags  
   google::ParseCommandLineFlags(&argc, &argv, true);
 
-  google::protobuf::io::OstreamOutputStream output_stream(&std::cout);
+  google::protobuf::io::FileOutputStream output_stream(STDOUT_FILENO);
 
   {
     // Write example request

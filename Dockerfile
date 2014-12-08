@@ -35,7 +35,7 @@ RUN svn checkout http://google-glog.googlecode.com/svn/trunk/ google-glog && \
     make install
 
 # Add .bashrc commands to the already present file
-ADD provision/.bashrc /tmp/.bashrc
+ADD docker/provision/.bashrc /tmp/.bashrc
 RUN cat /tmp/.bashrc >> ~/.bashrc
 
 # Install protobuf
@@ -47,6 +47,12 @@ RUN cd /tmp && \
     ./configure --prefix=/usr && \
     make && \
     make install
+
+# Checkout and compile Go
+RUN cd / && \
+    hg clone -u release-branch.go1.3 https://code.google.com/p/go && \
+    cd /go/src && \
+    ./make.bash
 
 # Download CEF from my own public version and extract it
 ADD https://googledrive.com/host/0B-unE3_O4B0uSWFYdEJZa1hEQmc/cef_binary_3.2171.1949_linux64.7z /tmp/cef.7z

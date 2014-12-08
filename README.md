@@ -20,13 +20,13 @@ Docker image for development
 Build the image:
 
 ```shell
-cmd/docker/build.sh
+docker/build.sh
 ```
 
 Run the image:
 
 ```shell
-cmd/docker/run.sh
+docker/run.sh
 ```
 
 
@@ -48,7 +48,7 @@ bin/karma -flagfile flags/karma
 Or test the seo app:
 
 ```shell
-cmd/run/test-seo.sh
+cmd/test-seo.sh
 ```
 
 

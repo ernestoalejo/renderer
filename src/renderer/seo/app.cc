@@ -56,6 +56,7 @@ void App::ReadRequests_() {
 
     CefBrowserSettings browser_settings;
     CefWindowInfo window_info;
+    window_info.windowless_rendering_enabled = true;
 
     LOG(INFO) << "request url: " << request.url();
     CefBrowserHost::CreateBrowser(window_info, handler, request.url(),

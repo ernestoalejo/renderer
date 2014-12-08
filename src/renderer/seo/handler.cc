@@ -110,11 +110,22 @@ void Handler::VisitSourceCode_(CefRefPtr<CefBrowser> browser,
   LOG(INFO) << "source obtained: " <<
       browser->GetMainFrame()->GetURL().ToString();
 
+  // Send the close order to the browser window in the correct thread
+  auto callback = base::Bind(&Handler::CloseBrowser_, this, browser);
+  CefPostTask(TID_UI, common::TaskFromCallback(callback));
+
   VLOG(2) << "browser closed; pending requests -> " << g_pending_handlers <<
       "; exit -> " << g_exit_all_handlers;
   if (g_pending_handlers == 0 && g_exit_all_handlers) {
     CefQuitMessageLoop();
   }
+}
+
+
+void Handler::CloseBrowser_(CefRefPtr<CefBrowser> browser) {
+  REQUIRE_UI_THREAD();
+
+  browser->GetHost()->CloseBrowser(true);
 }
 
 

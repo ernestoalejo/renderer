@@ -59,6 +59,8 @@ private:
   void GetSourceCodeDelayed_(CefRefPtr<CefBrowser> browser);
   void VisitSourceCode_(CefRefPtr<CefBrowser> browser, const CefString& source);
 
+  void CloseBrowser_(CefRefPtr<CefBrowser> browser);
+
   IMPLEMENT_REFCOUNTING(Handler);
 };
 

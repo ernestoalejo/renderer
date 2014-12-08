@@ -23,10 +23,6 @@ namespace seo {
 void App::OnContextInitialized() {
   REQUIRE_UI_THREAD();
 
-  render_handler_ = new common::RenderHandler(1900, 800);
-  request_handler_ = new RequestHandler;
-  request_handler_->Initialize();
-
   std::thread thread(std::bind(&App::ReadRequests_, this));
   thread.detach();
 }
@@ -50,8 +46,7 @@ void App::ReadRequests_() {
       return;
     }
 
-    Handler* handler = new Handler(render_handler_, request_handler_,
-        request.id());
+    Handler* handler = new Handler(request.id());
     CountNewHandler();
 
     CefBrowserSettings browser_settings;

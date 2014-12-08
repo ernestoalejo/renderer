@@ -21,8 +21,7 @@ namespace seo {
 class Handler : public CefClient,
                 public CefLoadHandler {
 public:
-  Handler(CefRefPtr<common::RenderHandler> render_handler,
-          CefRefPtr<seo::RequestHandler> request_handler, uint64_t id);
+  Handler(uint64_t id);
   ~Handler();
 
   // Provide access to the single global instance of this object.

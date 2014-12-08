@@ -31,13 +31,16 @@ base::Lock g_pending_handlers_lock;
 }  // namespace
 
 
-Handler::Handler(CefRefPtr<common::RenderHandler> render_handler,
-                 CefRefPtr<RequestHandler> request_handler, uint64_t id)
-: render_handler_(render_handler), request_handler_(request_handler),
-  output_stream_(STDOUT_FILENO), id_(id), loading_error_(false)
+Handler::Handler(uint64_t id)
+: output_stream_(STDOUT_FILENO), id_(id), loading_error_(false)
 {
   ASSERT(!g_instance);
   g_instance = this;
+
+  render_handler_ = new common::RenderHandler(1900, 800);
+
+  request_handler_ = new RequestHandler;
+  // request_handler_->Initialize();
 }
 
 Handler::~Handler() {

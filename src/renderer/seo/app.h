@@ -23,9 +23,6 @@ public:
   virtual void OnContextInitialized() OVERRIDE;
 
 private:
-  CefRefPtr<common::RenderHandler> render_handler_;
-  CefRefPtr<RequestHandler> request_handler_;
-
   void ReadRequests_();
 
   IMPLEMENT_REFCOUNTING(App);

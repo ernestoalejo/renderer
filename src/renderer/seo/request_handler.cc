@@ -4,14 +4,16 @@
 
 #include "renderer/seo/request_handler.h"
 
-#include <gflags/gflags.h>
-#include <glog/logging.h>
+#include <string>
 #include <fstream>
 
+#include "gflags/gflags.h"
+#include "glog/logging.h"
 #include "include/cef_url.h"
 
 
-DEFINE_string(blacklisted_domains, "", "file with a list (one per line) of blacklisted domains");
+DEFINE_string(blacklisted_domains, "",
+    "file with a list (one per line) of blacklisted domains");
 
 
 namespace seo {
@@ -58,7 +60,8 @@ void RequestHandler::OnResourceRedirect(CefRefPtr<CefBrowser> browser,
                                         CefRefPtr<CefFrame> frame,
                                         const CefString& old_url,
                                         CefString& new_url) {
-  LOG(INFO) << "resource redirect: " << old_url.ToString() << " -> " << new_url.ToString();
+  LOG(INFO) << "resource redirect: " << old_url.ToString() << " -> "
+      << new_url.ToString();
 }
 
 
@@ -69,7 +72,8 @@ void RequestHandler::Init() {
   if (!blacklisted_domains.empty()) {
     std::ifstream file(blacklisted_domains.c_str());
     if (!file) {
-      LOG(FATAL) << "cannot find the blacklisted domains file in: " << blacklisted_domains;
+      LOG(FATAL) << "cannot find the blacklisted domains file in: "
+          << blacklisted_domains;
     }
 
     std::string line;

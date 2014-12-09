@@ -17,16 +17,10 @@ class RenderHandler : public CefRenderHandler {
 
   // CefRenderHandler methods
   virtual bool GetViewRect(CefRefPtr<CefBrowser> browser,
-                           CefRect& rect) OVERRIDE {
-    rect.Set(0, 0, width_, height_);
-    return true;
-  }
-
+                           CefRect& rect) OVERRIDE;
   virtual void OnPaint(CefRefPtr<CefBrowser> browser, PaintElementType type,
                const RectList &dirtyRects, const void *buffer, int width,
-               int height) OVERRIDE {
-    // empty
-  }
+               int height) OVERRIDE;
 
  private:
   int width_, height_;

@@ -5,14 +5,14 @@
 #include "renderer/seo/app.h"
 
 #include <iostream>
-#include <thread>
+#include <thread>  // NOLINT
 
-#include <glog/logging.h>
-#include <google/protobuf/io/zero_copy_stream_impl.h>
-
-#include "base/util.h"
+#include "glog/logging.h"
+#include "google/protobuf/io/zero_copy_stream_impl.h"
 #include "include/cef_browser.h"
 #include "include/cef_command_line.h"
+
+#include "base/util.h"
 #include "proto/seo/request.pb.h"
 #include "renderer/common/protobufs.h"
 #include "renderer/seo/client.h"

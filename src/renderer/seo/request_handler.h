@@ -2,8 +2,11 @@
 // Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
-#ifndef RENDERER_REQUEST_HANDLER_H_
-#define RENDERER_REQUEST_HANDLER_H_
+#ifndef RENDERER_SEO_REQUEST_HANDLER_H_
+#define RENDERER_SEO_REQUEST_HANDLER_H_
+
+#include <string>
+#include <vector>
 
 #include "include/cef_request_handler.h"
 
@@ -38,4 +41,4 @@ class RequestHandler : public CefRequestHandler {
 }  // namespace seo
 
 
-#endif  // RENDERER_REQUEST_HANDLER_H_
+#endif  // RENDERER_SEO_REQUEST_HANDLER_H_

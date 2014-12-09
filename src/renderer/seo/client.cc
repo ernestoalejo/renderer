@@ -6,15 +6,14 @@
 
 #include <iostream>
 
-#include <glog/logging.h>
-
+#include "glog/logging.h"
 #include "include/base/cef_bind.h"
+#include "include/cef_app.h"
 
 #include "base/util.h"
-#include "include/cef_app.h"
 #include "renderer/common/protobufs.h"
-#include "renderer/common/visitors.h"
 #include "renderer/common/tasks.h"
+#include "renderer/common/visitors.h"
 
 
 namespace seo {
@@ -67,7 +66,7 @@ void Client::OnLoadError(CefRefPtr<CefBrowser> browser,
                           const CefString& failedUrl) {
   REQUIRE_UI_THREAD();
 
-  switch (int(errorCode)) {
+  switch (static_cast<int>(errorCode)) {
   case ERR_CONNECTION_REFUSED:
     LoadingError_(browser, Response_Status_CONNECTION_REFUSED);
     break;
@@ -87,7 +86,8 @@ void Client::OnLoadError(CefRefPtr<CefBrowser> browser,
     break;
 
   default:
-    LOG(FATAL) << "error loading (" << errorCode << "): " << errorText.ToString();
+    LOG(FATAL) << "error loading (" << errorCode << "): " <<
+        errorText.ToString();
   }
 }
 

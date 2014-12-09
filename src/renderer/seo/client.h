@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
-#ifndef RENDERER_HANDLER_H_
-#define RENDERER_HANDLER_H_
+#ifndef RENDERER_SEO_CLIENT_H_
+#define RENDERER_SEO_CLIENT_H_
 
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 #include <glog/logging.h>
@@ -22,7 +22,7 @@ namespace seo {
 class Client : public CefClient,
                 public CefLoadHandler {
  public:
-  Client(uint64_t id);
+  explicit Client(uint64_t id);
 
   // CefClient methods
   virtual CefRefPtr<CefLoadHandler> GetLoadHandler() OVERRIDE {
@@ -77,4 +77,4 @@ void ExitAllHandlers();
 }  // namespace seo
 
 
-#endif  // RENDERER_HANDLER_H_
+#endif  // RENDERER_SEO_CLIENT_H_

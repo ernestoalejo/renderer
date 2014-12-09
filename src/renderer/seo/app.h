@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
-#ifndef RENDERER_SEO_SEO_APP_H_
-#define RENDERER_SEO_SEO_APP_H_
+#ifndef RENDERER_SEO_APP_H_
+#define RENDERER_SEO_APP_H_
 
 #include "include/cef_app.h"
 
@@ -13,7 +13,8 @@ namespace seo {
 
 class App : public CefApp, public CefBrowserProcessHandler {
  public:
-  virtual CefRefPtr<CefBrowserProcessHandler> GetBrowserProcessHandler() OVERRIDE {
+  virtual CefRefPtr<CefBrowserProcessHandler>
+      GetBrowserProcessHandler() OVERRIDE {
     return this;
   }
 
@@ -30,5 +31,5 @@ class App : public CefApp, public CefBrowserProcessHandler {
 }  // namespace seo
 
 
-#endif  // RENDERER_SEO_SEO_APP_H_
+#endif  // RENDERER_SEO_APP_H_
 

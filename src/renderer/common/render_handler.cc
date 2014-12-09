@@ -14,4 +14,17 @@ RenderHandler::RenderHandler(int width, int height)
 }
 
 
+bool RenderHandler::GetViewRect(CefRefPtr<CefBrowser> browser, CefRect& rect) {
+  rect.Set(0, 0, width_, height_);
+  return true;
+}
+
+
+void RenderHandler::OnPaint(CefRefPtr<CefBrowser> browser,
+                            PaintElementType type, const RectList &dirtyRects,
+                            const void *buffer, int width, int height) {
+  // empty
+}
+
+
 }  // namespace common

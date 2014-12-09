@@ -25,9 +25,9 @@ base::Lock g_pending_handlers_lock;
 }  // namespace
 
 
-Client::Client(uint64_t id)
-: loading_error_(false), id_(id) {
-  // empty
+Client::Client(uint64_t id, const std::string& url)
+: loading_error_(false) {
+  request_ = new Request(id, url);
 }
 
 
@@ -38,8 +38,6 @@ void Client::Init() {
   request_handler_->Init();
 
   display_handler_ = new DisplayHandler();
-
-  emitter_ = new Emitter(id_);
 }
 
 void Client::OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
@@ -69,11 +67,11 @@ void Client::OnLoadError(CefRefPtr<CefBrowser> browser,
 
   switch (static_cast<int>(errorCode)) {
   case ERR_CONNECTION_REFUSED:
-    LoadingError_(browser, Response_Status_CONNECTION_REFUSED);
+    LoadingError_(browser, proto::seo::Response_Status_CONNECTION_REFUSED);
     break;
 
   case ERR_NAME_NOT_RESOLVED:
-    LoadingError_(browser, Response_Status_NAME_NOT_RESOLVED);
+    LoadingError_(browser, proto::seo::Response_Status_NAME_NOT_RESOLVED);
     break;
 
   case ERR_ABORTED:
@@ -83,7 +81,7 @@ void Client::OnLoadError(CefRefPtr<CefBrowser> browser,
     break;
 
   case -137:  // ERR_NAME_RESOLUTION_FAILED not present
-    LoadingError_(browser, Response_Status_NAME_RESOLUTION_FAILED);
+    LoadingError_(browser, proto::seo::Response_Status_NAME_RESOLUTION_FAILED);
     break;
 
   default:
@@ -109,7 +107,7 @@ void Client::VisitSourceCode_(CefRefPtr<CefBrowser> browser,
   base::AutoLock lock_scope(g_pending_handlers_lock);
   g_pending_handlers--;
 
-  emitter_->EmitSourceCode(source);
+  request_->EmitSourceCode(source);
 
   LOG(INFO) << "source obtained: " <<
       browser->GetMainFrame()->GetURL().ToString();
@@ -119,13 +117,13 @@ void Client::VisitSourceCode_(CefRefPtr<CefBrowser> browser,
 
 
 void Client::LoadingError_(CefRefPtr<CefBrowser> browser,
-                         Response_Status status) {
+                           proto::seo::Response_Status status) {
   // Reduce the count of pending requests. If we reach zero and we're exiting
   // the app, quit the message loop too
   base::AutoLock lock_scope(g_pending_handlers_lock);
   g_pending_handlers--;
 
-  emitter_->EmitError(status);
+  request_->EmitError(status);
 
   // Signal the loading error internally and by stderr
   LOG(ERROR) << "load error: " << status;

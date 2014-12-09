@@ -52,10 +52,10 @@ func requester(stdin io.WriteCloser) {
 	for i := 0; i < 1; i++ {
 		log.Println("Sending", i)
 
-		request := &seo.Request{
+		request := &proto_seo.Request{
 			Id:      proto.Uint64(uint64(i)),
 			Url:     proto.String("http://laovejaverde.es/"),
-			Command: seo.Request_GET_SOURCE_CODE.Enum(),
+			Command: proto_seo.Request_GET_SOURCE_CODE.Enum(),
 		}
 		if err := sendRequest(stdin, request); err != nil {
 			log.Fatal(err)
@@ -64,8 +64,8 @@ func requester(stdin io.WriteCloser) {
 		time.Sleep(3 * time.Second)
 	}
 
-	request := &seo.Request{
-		Command: seo.Request_EXIT.Enum(),
+	request := &proto_seo.Request{
+		Command: proto_seo.Request_EXIT.Enum(),
 	}
 	if err := sendRequest(stdin, request); err != nil {
 		log.Fatal(err)
@@ -74,7 +74,7 @@ func requester(stdin io.WriteCloser) {
 	log.Println("all messages sent!")
 }
 
-func sendRequest(stdin io.WriteCloser, request *seo.Request) error {
+func sendRequest(stdin io.WriteCloser, request *proto_seo.Request) error {
 	log.Println("send request; command:", request.Command)
 	data, err := proto.Marshal(request)
 	if err != nil {
@@ -115,14 +115,14 @@ func reader(stdout io.ReadCloser) {
 			log.Fatal(err)
 		}
 
-		response := &seo.Response{}
+		response := &proto_seo.Response{}
 		if err := proto.Unmarshal(data, response); err != nil {
 			log.Fatal(err)
 		}
 
 		log.Println("id:", response.GetId())
 		log.Println("status:", response.GetStatus())
-		if response.GetStatus() == seo.Response_OK {
+		if response.GetStatus() == proto_seo.Response_OK {
 			log.Println("source code start:", response.GetSourceCode()[:80])
 		}
 	}

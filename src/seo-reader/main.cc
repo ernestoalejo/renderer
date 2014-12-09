@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
   // Read responses
   google::protobuf::io::FileInputStream input_stream(STDIN_FILENO);
   while (true) {
-    seo::Response response;
+    proto::seo::Response response;
     if (!common::ReadDelimitedFrom(&input_stream, &response)) {
       // EOF is not a real error
       if (fgetc(stdin) == EOF) {

@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-package seo;
+package proto.seo;
 
 message Response {
   enum Status {

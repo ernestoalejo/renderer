@@ -34,20 +34,20 @@ void App::ReadRequests_() {
 
   google::protobuf::io::FileInputStream input_stream(STDIN_FILENO);
   while (true) {
-    Request request;
+    proto::seo::Request request;
     if (!common::ReadDelimitedFrom(&input_stream, &request)) {
       LOG(FATAL) << "cannot read delimited request";
     }
 
     VLOG(2) << "read command: " << request.command();
 
-    if (request.command() == Request_Command_EXIT) {
+    if (request.command() == proto::seo::Request_Command_EXIT) {
       LOG(INFO) << "received exit";
       ExitAllHandlers();
       return;
     }
 
-    Client* client = new Client(request.id());
+    Client* client = new Client(request.id(), request.url());
     client->Init();
     CountNewHandler();
 

@@ -4,14 +4,11 @@
 
 #include "renderer/seo/client.h"
 
-#include <iostream>
-
 #include "glog/logging.h"
 #include "include/base/cef_bind.h"
 #include "include/cef_app.h"
 
 #include "base/util.h"
-#include "renderer/common/protobufs.h"
 #include "renderer/common/tasks.h"
 #include "renderer/common/visitors.h"
 
@@ -29,7 +26,7 @@ base::Lock g_pending_handlers_lock;
 
 
 Client::Client(uint64_t id)
-: output_stream_(STDOUT_FILENO), id_(id), loading_error_(false) {
+: loading_error_(false), id_(id) {
   // empty
 }
 
@@ -39,6 +36,10 @@ void Client::Init() {
 
   request_handler_ = new RequestHandler();
   request_handler_->Init();
+
+  display_handler_ = new DisplayHandler();
+
+  emitter_ = new Emitter(id_);
 }
 
 void Client::OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
@@ -108,18 +109,7 @@ void Client::VisitSourceCode_(CefRefPtr<CefBrowser> browser,
   base::AutoLock lock_scope(g_pending_handlers_lock);
   g_pending_handlers--;
 
-  // Write response
-  seo::Response response;
-  response.set_status(Response_Status_OK);
-  response.set_source_code(source.ToString());
-  response.set_id(id_);
-
-  if (!common::WriteDelimitedTo(response, &output_stream_)) {
-    LOG(FATAL) << "cannot write response message to stdout";
-  }
-
-  // Flush stdout or otherwise some of the content may not appear in the output
-  output_stream_.Flush();
+  emitter_->EmitSourceCode(source);
 
   LOG(INFO) << "source obtained: " <<
       browser->GetMainFrame()->GetURL().ToString();
@@ -135,17 +125,7 @@ void Client::LoadingError_(CefRefPtr<CefBrowser> browser,
   base::AutoLock lock_scope(g_pending_handlers_lock);
   g_pending_handlers--;
 
-  // Write response
-  seo::Response response;
-  response.set_status(status);
-  response.set_id(id_);
-
-  if (!common::WriteDelimitedTo(response, &output_stream_)) {
-    LOG(FATAL) << "cannot write response message to stdout";
-  }
-
-  // Flush stdout or otherwise some of the content may not appear in the output
-  output_stream_.Flush();
+  emitter_->EmitError(status);
 
   // Signal the loading error internally and by stderr
   LOG(ERROR) << "load error: " << status;

@@ -5,14 +5,14 @@
 #ifndef RENDERER_SEO_CLIENT_H_
 #define RENDERER_SEO_CLIENT_H_
 
-#include <google/protobuf/io/zero_copy_stream_impl.h>
-#include <glog/logging.h>
-
-#include "include/cef_client.h"
+#include "glog/logging.h"
 #include "include/base/cef_lock.h"
+#include "include/cef_client.h"
 
 #include "proto/seo/response.pb.h"
 #include "renderer/common/render_handler.h"
+#include "renderer/seo/display_handler.h"
+#include "renderer/seo/emitter.h"
 #include "renderer/seo/request_handler.h"
 
 
@@ -34,6 +34,9 @@ class Client : public CefClient,
   virtual CefRefPtr<CefRequestHandler> GetRequestHandler() OVERRIDE {
     return request_handler_;
   }
+  virtual CefRefPtr<CefDisplayHandler> GetDisplayHandler() OVERRIDE {
+    return display_handler_;
+  }
 
   // CefLoadHandler methods
   virtual void OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
@@ -49,14 +52,15 @@ class Client : public CefClient,
  private:
   CefRefPtr<common::RenderHandler> render_handler_;
   CefRefPtr<RequestHandler> request_handler_;
-
-  google::protobuf::io::FileOutputStream output_stream_;
-
-  uint64_t id_;
+  CefRefPtr<DisplayHandler> display_handler_;
 
   // Signals an error when loading the page, so the source won't be sent back
   // to the requester
   bool loading_error_;
+
+  uint64_t id_;
+
+  Emitter* emitter_;
 
   void GetSourceCodeDelayed_(CefRefPtr<CefBrowser> browser);
   void VisitSourceCode_(CefRefPtr<CefBrowser> browser, const CefString& source);

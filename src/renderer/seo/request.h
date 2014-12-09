@@ -28,6 +28,14 @@ class Request {
     return url_;
   }
 
+  bool failed() {
+    return failed_;
+  }
+
+  void set_failed(bool failed) {
+    failed_ = failed;
+  }
+
   void EmitError(proto::seo::Response_Status status);
   void EmitSourceCode(const CefString& source_code);
 
@@ -36,6 +44,8 @@ class Request {
   std::string url_;
 
   google::protobuf::io::FileOutputStream output_stream_;
+
+  bool failed_;
 
   void Write_(const proto::seo::Response& response);
 

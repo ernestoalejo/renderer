@@ -25,8 +25,7 @@ base::Lock g_pending_handlers_lock;
 }  // namespace
 
 
-Client::Client(uint64_t id, const std::string& url)
-: loading_error_(false) {
+Client::Client(uint64_t id, const std::string& url) {
   request_ = new Request(id, url);
 }
 
@@ -45,7 +44,7 @@ void Client::OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
                                    bool canGoForward) {
   REQUIRE_UI_THREAD();
 
-  if (loading_error_) {
+  if (request_->failed()) {
     return;
   }
 
@@ -127,7 +126,7 @@ void Client::LoadingError_(CefRefPtr<CefBrowser> browser,
 
   // Signal the loading error internally and by stderr
   LOG(ERROR) << "load error: " << status;
-  loading_error_ = true;
+  request_->set_failed(true);
 
   // Close the browser process
   CloseBrowser_(browser);

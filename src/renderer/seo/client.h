@@ -56,10 +56,6 @@ class Client : public CefClient,
   CefRefPtr<RequestHandler> request_handler_;
   CefRefPtr<DisplayHandler> display_handler_;
 
-  // Signals an error when loading the page, so the source won't be sent back
-  // to the requester
-  bool loading_error_;
-
   Request* request_;
 
   void GetSourceCodeDelayed_(CefRefPtr<CefBrowser> browser);

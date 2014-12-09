@@ -13,7 +13,7 @@ namespace seo {
 
 
 Request::Request(uint64_t id, const std::string& url)
-: id_(id), url_(url), output_stream_(STDOUT_FILENO) {
+: id_(id), url_(url), output_stream_(STDOUT_FILENO), failed_(false) {
   // empty
 }
 

@@ -18,13 +18,13 @@ class LoadHandler : public CefLoadHandler {
   explicit LoadHandler(Request* request_);
 
   // CefLoadHandler methods
-  virtual void OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
-                                    bool isLoading, bool canGoBack,
-                                    bool canGoForward) OVERRIDE;
   virtual void OnLoadError(CefRefPtr<CefBrowser> browser,
                            CefRefPtr<CefFrame> frame, ErrorCode errorCode,
                            const CefString& errorText,
                            const CefString& failedUrl) OVERRIDE;
+  virtual void OnLoadEnd(CefRefPtr<CefBrowser> browser,
+                         CefRefPtr<CefFrame> frame,
+                         int http_status_code) OVERRIDE;
 
  private:
   Request* request_;

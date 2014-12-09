@@ -21,25 +21,6 @@ LoadHandler::LoadHandler(Request* request)
 }
 
 
-void LoadHandler::OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
-                                   bool isLoading, bool canGoBack,
-                                   bool canGoForward) {
-  REQUIRE_UI_THREAD();
-
-  if (request_->failed() || request_->closing()) {
-    return;
-  }
-
-  if (!isLoading) {
-    LOG(INFO) << "page loaded: " << request_->url();
-
-    CefRefPtr<CefTask> task = common::TaskFromCallback(
-        base::Bind(&LoadHandler::GetSourceCodeDelayed_, this));
-    CefPostDelayedTask(TID_UI, task, 500);
-  }
-}
-
-
 void LoadHandler::OnLoadError(CefRefPtr<CefBrowser> browser,
                           CefRefPtr<CefFrame> frame,
                           ErrorCode errorCode, const CefString& errorText,
@@ -73,6 +54,25 @@ void LoadHandler::OnLoadError(CefRefPtr<CefBrowser> browser,
     LOG(FATAL) << "error loading (" << errorCode << "): " <<
         errorText.ToString();
   }
+}
+
+
+void LoadHandler::OnLoadEnd(CefRefPtr<CefBrowser> browser,
+                            CefRefPtr<CefFrame> frame,
+                            int http_status_code) {
+  if (request_->closing() || request_->failed()) {
+    return;
+  }
+
+  if (!frame->IsMain()) {
+    return;
+  }
+
+  LOG(INFO) << "page loaded: " << request_->url();
+
+  CefRefPtr<CefTask> task = common::TaskFromCallback(
+      base::Bind(&LoadHandler::GetSourceCodeDelayed_, this));
+  CefPostDelayedTask(TID_UI, task, 500);
 }
 
 

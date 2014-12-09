@@ -52,11 +52,11 @@ void LoadHandler::OnLoadError(CefRefPtr<CefBrowser> browser,
 
   switch (static_cast<int>(errorCode)) {
   case ERR_CONNECTION_REFUSED:
-    LoadingError_( proto::seo::Response_Status_CONNECTION_REFUSED);
+    request_->EmitError(proto::seo::Response_Status_CONNECTION_REFUSED);
     break;
 
   case ERR_NAME_NOT_RESOLVED:
-    LoadingError_( proto::seo::Response_Status_NAME_NOT_RESOLVED);
+    request_->EmitError(proto::seo::Response_Status_NAME_NOT_RESOLVED);
     break;
 
   case ERR_ABORTED:
@@ -66,7 +66,7 @@ void LoadHandler::OnLoadError(CefRefPtr<CefBrowser> browser,
     break;
 
   case -137:  // ERR_NAME_RESOLUTION_FAILED not present
-    LoadingError_( proto::seo::Response_Status_NAME_RESOLUTION_FAILED);
+    request_->EmitError(proto::seo::Response_Status_NAME_RESOLUTION_FAILED);
     break;
 
   default:
@@ -93,14 +93,6 @@ void LoadHandler::VisitSourceCode_(const CefString& source) {
   LOG(INFO) << "source obtained: " << request_->url();
 
   request_->EmitSourceCode(source);
-}
-
-
-void LoadHandler::LoadingError_(proto::seo::Response_Status status) {
-  // Signal the loading error internally and by stderr
-  LOG(ERROR) << "load error: " << status;
-
-  request_->EmitError(status);
 }
 
 

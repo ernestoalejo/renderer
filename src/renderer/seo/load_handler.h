@@ -31,7 +31,6 @@ class LoadHandler : public CefLoadHandler {
 
   void GetSourceCodeDelayed_();
   void VisitSourceCode_(const CefString& source);
-  void LoadingError_(proto::seo::Response_Status status);
 
   IMPLEMENT_REFCOUNTING(LoadHandler);
 };

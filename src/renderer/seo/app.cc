@@ -9,12 +9,13 @@
 
 #include "glog/logging.h"
 #include "google/protobuf/io/zero_copy_stream_impl.h"
+#include "include/base/cef_bind.h"
 #include "include/cef_browser.h"
-#include "include/cef_command_line.h"
 
 #include "base/util.h"
 #include "proto/seo/request.pb.h"
 #include "renderer/common/protobufs.h"
+#include "renderer/common/tasks.h"
 #include "renderer/seo/client.h"
 
 
@@ -45,7 +46,16 @@ void App::ReadRequests_() {
     // When the browsers finish they will close themselves and the app will
     // close too.
     if (request.command() == proto::seo::Request_Command_EXIT) {
-      LOG(INFO) << "received exit";
+      LOG(INFO) << "received exit. waiting for all browsers to exit...";
+      while (LifeSpanHandler::CountOpenBrowsers() > 0) {
+        sleep(3);
+      }
+
+      LOG(INFO) << "all browsers exited, quit message loop";
+
+      CefPostTask(TID_UI,
+          common::TaskFromCallback(base::Bind(CefQuitMessageLoop)));
+
       return;
     }
 

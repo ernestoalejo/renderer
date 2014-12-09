@@ -16,7 +16,7 @@ import (
 func main() {
 	// cmd := exec.Command()
 	cmd := exec.Command("/bin/bash", "-c",
-		"bin/seo -logtostderr -v 1 "+
+		"bin/seo -logtostderr -v 2 "+
 			"-blacklisted_domains config/blacklisted-domains "+
 			"-locales_dir_path /cef/out/Release/locales "+
 			"-resources_dir_path /cef/out/Release")

@@ -74,6 +74,8 @@ void RequestHandler::OnResourceRedirect(CefRefPtr<CefBrowser> browser,
                                         CefRefPtr<CefFrame> frame,
                                         const CefString& old_url,
                                         CefString& new_url) {
+  LOG(INFO) << "redirect detected: " << old_url.ToString() << " -> " <<
+      new_url.ToString();
   request_->EmitRedirection(new_url.ToString());
 }
 

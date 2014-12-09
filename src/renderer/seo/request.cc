@@ -68,6 +68,7 @@ void Request::CloseBrowser_() {
 void Request::CloseBrowserUIThread_() {
   REQUIRE_UI_THREAD();
 
+  VLOG(2) << "close browser from the UI thread";
   browser_->GetHost()->CloseBrowser(true);
 }
 

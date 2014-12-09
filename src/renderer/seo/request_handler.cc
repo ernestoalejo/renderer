@@ -19,6 +19,12 @@ DEFINE_string(blacklisted_domains, "",
 namespace seo {
 
 
+RequestHandler::RequestHandler(Request* request)
+: request_(request) {
+  // empty
+}
+
+
 bool RequestHandler::OnBeforePluginLoad(CefRefPtr<CefBrowser> browser,
                                         const CefString& url,
                                         const CefString& policy_url,
@@ -27,9 +33,16 @@ bool RequestHandler::OnBeforePluginLoad(CefRefPtr<CefBrowser> browser,
   return true;
 }
 
+
 bool RequestHandler::OnBeforeResourceLoad(CefRefPtr<CefBrowser> browser,
                                     CefRefPtr<CefFrame> frame,
                                     CefRefPtr<CefRequest> request) {
+  if (request_->failed() || request_->closing()) {
+    VLOG(1) << "blocked resource because request failed or we are closing: " <<
+        request->GetURL().ToString();
+    return true;
+  }
+
   auto rt = request->GetResourceType();
   if (rt == RT_STYLESHEET || rt == RT_IMAGE || rt == RT_FONT_RESOURCE ||
       rt == RT_FAVICON) {
@@ -56,12 +69,12 @@ bool RequestHandler::OnBeforeResourceLoad(CefRefPtr<CefBrowser> browser,
   return false;
 }
 
+
 void RequestHandler::OnResourceRedirect(CefRefPtr<CefBrowser> browser,
                                         CefRefPtr<CefFrame> frame,
                                         const CefString& old_url,
                                         CefString& new_url) {
-  LOG(INFO) << "resource redirect: " << old_url.ToString() << " -> "
-      << new_url.ToString();
+  request_->EmitRedirection(new_url.ToString());
 }
 
 

@@ -10,12 +10,16 @@
 
 #include "include/cef_request_handler.h"
 
+#include "renderer/seo/request.h"
+
 
 namespace seo {
 
 
 class RequestHandler : public CefRequestHandler {
  public:
+  explicit RequestHandler(Request* request);
+
   // CefRequestHandler methods
   virtual bool OnBeforePluginLoad(CefRefPtr<CefBrowser> browser,
                                   const CefString& url,
@@ -33,6 +37,8 @@ class RequestHandler : public CefRequestHandler {
 
  private:
   std::vector<std::string> blacklisted_domains_;
+  
+  Request* request_;
 
   IMPLEMENT_REFCOUNTING(RequestHandler);
 };

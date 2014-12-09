@@ -5,35 +5,70 @@
 #include "renderer/seo/request.h"
 
 #include "glog/logging.h"
+#include "include/base/cef_bind.h"
 
+#include "base/util.h"
 #include "renderer/common/protobufs.h"
+#include "renderer/common/tasks.h"
 
 
 namespace seo {
 
 
 Request::Request(uint64_t id, const std::string& url)
-: id_(id), url_(url), output_stream_(STDOUT_FILENO), failed_(false) {
+: id_(id), url_(url), output_stream_(STDOUT_FILENO), failed_(false),
+  closing_(false) {
   // empty
 }
 
 
 void Request::EmitError(proto::seo::Response_Status status) {
+  failed_ = true;
+
   proto::seo::Response response;
-  response.set_status(status);
   response.set_id(id_);
+  response.set_status(status);
 
   Write_(response);
+  CloseBrowser_();
 }
 
 
 void Request::EmitSourceCode(const CefString& source_code) {
   proto::seo::Response response;
+  response.set_id(id_);
   response.set_status(proto::seo::Response_Status_OK);
   response.set_source_code(source_code.ToString());
-  response.set_id(id_);
 
   Write_(response);
+  CloseBrowser_();
+}
+
+
+void Request::EmitRedirection(const std::string& url) {
+  proto::seo::Response response;
+  response.set_id(id_);
+  response.set_status(proto::seo::Response_Status_REDIRECT);
+  response.set_url(url);
+
+  Write_(response);
+  CloseBrowser_();
+}
+
+
+void Request::CloseBrowser_() {
+  closing_ = true;
+
+  // Send the close order to the browser window in the correct thread
+  auto callback = base::Bind(&Request::CloseBrowserUIThread_, this);
+  CefPostTask(TID_UI, common::TaskFromCallback(callback));
+}
+
+
+void Request::CloseBrowserUIThread_() {
+  REQUIRE_UI_THREAD();
+
+  browser_->GetHost()->CloseBrowser(true);
 }
 
 

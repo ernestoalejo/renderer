@@ -7,14 +7,32 @@
 
 #include "include/cef_load_handler.h"
 
+#include "renderer/seo/request.h"
+
 
 namespace seo {
 
 
 class LoadHandler : public CefLoadHandler {
  public:
+  explicit LoadHandler(Request* request_);
+
+  // CefLoadHandler methods
+  virtual void OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
+                                    bool isLoading, bool canGoBack,
+                                    bool canGoForward) OVERRIDE;
+  virtual void OnLoadError(CefRefPtr<CefBrowser> browser,
+                           CefRefPtr<CefFrame> frame, ErrorCode errorCode,
+                           const CefString& errorText,
+                           const CefString& failedUrl) OVERRIDE;
 
  private:
+  Request* request_;
+
+  void GetSourceCodeDelayed_();
+  void VisitSourceCode_(const CefString& source);
+  void LoadingError_(proto::seo::Response_Status status);
+
   IMPLEMENT_REFCOUNTING(LoadHandler);
 };
 

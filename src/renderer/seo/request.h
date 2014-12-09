@@ -9,6 +9,7 @@
 
 #include "google/protobuf/io/zero_copy_stream_impl.h"
 #include "include/cef_base.h"
+#include "include/cef_browser.h"
 
 #include "proto/seo/response.pb.h"
 
@@ -32,12 +33,21 @@ class Request {
     return failed_;
   }
 
-  void set_failed(bool failed) {
-    failed_ = failed;
+  bool closing() {
+    return closing_;
+  }
+
+  CefRefPtr<CefBrowser> browser() {
+    return browser_;
+  }
+
+  void set_browser(CefRefPtr<CefBrowser> browser) {
+    browser_ = browser;
   }
 
   void EmitError(proto::seo::Response_Status status);
   void EmitSourceCode(const CefString& source_code);
+  void EmitRedirection(const std::string& url);
 
  private:
   uint64_t id_;
@@ -45,9 +55,14 @@ class Request {
 
   google::protobuf::io::FileOutputStream output_stream_;
 
-  bool failed_;
+  bool failed_, closing_;
+
+  CefRefPtr<CefBrowser> browser_;
 
   void Write_(const proto::seo::Response& response);
+
+  void CloseBrowser_();
+  void CloseBrowserUIThread_();
 
   IMPLEMENT_REFCOUNTING(Request);
 };

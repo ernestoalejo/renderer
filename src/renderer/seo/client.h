@@ -14,6 +14,8 @@
 #include "proto/seo/response.pb.h"
 #include "renderer/common/render_handler.h"
 #include "renderer/seo/display_handler.h"
+#include "renderer/seo/life_span_handler.h"
+#include "renderer/seo/load_handler.h"
 #include "renderer/seo/request.h"
 #include "renderer/seo/request_handler.h"
 
@@ -21,14 +23,13 @@
 namespace seo {
 
 
-class Client : public CefClient,
-                public CefLoadHandler {
+class Client : public CefClient {
  public:
   Client(uint64_t id, const std::string& url);
 
   // CefClient methods
   virtual CefRefPtr<CefLoadHandler> GetLoadHandler() OVERRIDE {
-    return this;
+    return load_handler_;
   }
   virtual CefRefPtr<CefRenderHandler> GetRenderHandler() OVERRIDE {
     return render_handler_;
@@ -39,15 +40,9 @@ class Client : public CefClient,
   virtual CefRefPtr<CefDisplayHandler> GetDisplayHandler() OVERRIDE {
     return display_handler_;
   }
-
-  // CefLoadHandler methods
-  virtual void OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
-                                    bool isLoading, bool canGoBack,
-                                    bool canGoForward) OVERRIDE;
-  virtual void OnLoadError(CefRefPtr<CefBrowser> browser,
-                           CefRefPtr<CefFrame> frame, ErrorCode errorCode,
-                           const CefString& errorText,
-                           const CefString& failedUrl) OVERRIDE;
+  virtual CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() OVERRIDE {
+    return life_span_handler_;
+  }
 
   void Init();
 
@@ -55,24 +50,13 @@ class Client : public CefClient,
   CefRefPtr<common::RenderHandler> render_handler_;
   CefRefPtr<RequestHandler> request_handler_;
   CefRefPtr<DisplayHandler> display_handler_;
+  CefRefPtr<LoadHandler> load_handler_;
+  CefRefPtr<LifeSpanHandler> life_span_handler_;
 
   Request* request_;
 
-  void GetSourceCodeDelayed_(CefRefPtr<CefBrowser> browser);
-  void VisitSourceCode_(CefRefPtr<CefBrowser> browser, const CefString& source);
-
-  void LoadingError_(CefRefPtr<CefBrowser> browser,
-      proto::seo::Response_Status status);
-
-  void CloseBrowser_(CefRefPtr<CefBrowser> browser);
-  void CloseBrowserUIThread_(CefRefPtr<CefBrowser> browser);
-
   IMPLEMENT_REFCOUNTING(Client);
 };
-
-
-void CountNewHandler();
-void ExitAllHandlers();
 
 
 }  // namespace seo

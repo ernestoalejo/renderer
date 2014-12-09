@@ -5,12 +5,16 @@ package proto.seo;
 message Response {
   enum Status {
     OK = 0;
-    CONNECTION_REFUSED = 1;
-    NAME_NOT_RESOLVED = 2;
-    NAME_RESOLUTION_FAILED = 3;
+
+    REDIRECT = 1;
+
+    CONNECTION_REFUSED = 2;
+    NAME_NOT_RESOLVED = 3;
+    NAME_RESOLUTION_FAILED = 4;
   }
 
-  optional string source_code = 1;
+  optional uint64 id = 1;
   optional Status status = 2;
-  optional uint64 id = 3;
+  optional string source_code = 3;
+  optional string url = 4;
 }

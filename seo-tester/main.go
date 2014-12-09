@@ -50,10 +50,10 @@ func main() {
 
 func requester(stdin io.WriteCloser) {
 	for i := 0; i < 1; i++ {
-		log.Println("Sending", i)
+		log.Println("Sending", i + 1)
 
 		request := &proto_seo.Request{
-			Id:      proto.Uint64(uint64(i)),
+			Id:      proto.Uint64(uint64(i + 1)),
 			Url:     proto.String("http://laovejaverde.es/"),
 			Command: proto_seo.Request_GET_SOURCE_CODE.Enum(),
 		}
@@ -124,6 +124,9 @@ func reader(stdout io.ReadCloser) {
 		log.Println("status:", response.GetStatus())
 		if response.GetStatus() == proto_seo.Response_OK {
 			log.Println("source code start:", response.GetSourceCode()[:80])
+		}
+		if response.GetStatus() == proto_seo.Response_REDIRECT {
+			log.Println("redirect url:", response.GetUrl())
 		}
 	}
 }

@@ -41,15 +41,16 @@ void App::ReadRequests_() {
 
     VLOG(2) << "read command: " << request.command();
 
+    // When we receive the exit command no more inputs are read from stdin
+    // When the browsers finish they will close themselves and the app will
+    // close too.
     if (request.command() == proto::seo::Request_Command_EXIT) {
       LOG(INFO) << "received exit";
-      ExitAllHandlers();
       return;
     }
 
     Client* client = new Client(request.id(), request.url());
     client->Init();
-    CountNewHandler();
 
     CefBrowserSettings browser_settings;
     CefWindowInfo window_info;

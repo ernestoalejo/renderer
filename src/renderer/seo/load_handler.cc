@@ -60,11 +60,7 @@ void LoadHandler::OnLoadError(CefRefPtr<CefBrowser> browser,
 void LoadHandler::OnLoadEnd(CefRefPtr<CefBrowser> browser,
                             CefRefPtr<CefFrame> frame,
                             int http_status_code) {
-  if (request_->closing() || request_->failed()) {
-    return;
-  }
-
-  if (!frame->IsMain()) {
+  if (request_->closing() || request_->failed() || !frame->IsMain()) {
     return;
   }
 
@@ -72,7 +68,7 @@ void LoadHandler::OnLoadEnd(CefRefPtr<CefBrowser> browser,
 
   CefRefPtr<CefTask> task = common::TaskFromCallback(
       base::Bind(&LoadHandler::GetSourceCodeDelayed_, this));
-  CefPostDelayedTask(TID_UI, task, 500);
+  CefPostDelayedTask(TID_UI, task, 0);
 }
 
 

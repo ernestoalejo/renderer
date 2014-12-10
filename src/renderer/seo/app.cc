@@ -69,6 +69,8 @@ void App::ReadRequests_() {
     LOG(INFO) << "request url: " << request.url();
     CefBrowserHost::CreateBrowser(window_info, client, request.url(),
         browser_settings, NULL);
+
+    LifeSpanHandler::NewBrowserCreated();
   }
 }
 

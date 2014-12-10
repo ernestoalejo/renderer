@@ -34,12 +34,15 @@ int LifeSpanHandler::CountOpenBrowsers() {
 }
 
 
-void LifeSpanHandler::OnAfterCreated(CefRefPtr<CefBrowser> browser) {
+void LifeSpanHandler::NewBrowserCreated() {
   base::AutoLock lock_scope(g_browsers_count_lock);
   g_browsers_count++;
-
+  
   VLOG(2) << "new browser, " << g_browsers_count << " in total";
+}
 
+
+void LifeSpanHandler::OnAfterCreated(CefRefPtr<CefBrowser> browser) {
   request_->set_browser(browser);
 }
 

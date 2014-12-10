@@ -18,6 +18,7 @@ class LifeSpanHandler : public CefLifeSpanHandler {
   explicit LifeSpanHandler(Request* request_);
 
   static int CountOpenBrowsers();
+  static void NewBrowserCreated();
 
   // CefLifeSpanHandler methods
   virtual void OnAfterCreated(CefRefPtr<CefBrowser> browser) OVERRIDE;

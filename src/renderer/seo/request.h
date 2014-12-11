@@ -45,6 +45,18 @@ class Request {
     browser_ = browser;
   }
 
+  int pending_requests() {
+    return pending_requests_;
+  }
+
+  void IncrementPendingRequests() {
+    pending_requests_++;
+  }
+
+  void DecrementPendingRequests() {
+    pending_requests_--;
+  }
+
   void EmitError(proto::seo::Response_Status status);
   void EmitSourceCode(const CefString& source_code);
   void EmitRedirection(const std::string& url);
@@ -58,6 +70,8 @@ class Request {
   bool failed_, closing_;
 
   CefRefPtr<CefBrowser> browser_;
+
+  int pending_requests_;
 
   void Write_(const proto::seo::Response& response);
 

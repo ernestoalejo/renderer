@@ -11,19 +11,15 @@
 #include "glog/logging.h"
 #include "include/cef_url.h"
 
-
 DEFINE_string(blacklisted_domains, "",
     "file with a list (one per line) of blacklisted domains");
 
-
 namespace seo {
-
 
 RequestHandler::RequestHandler(Request* request)
 : request_(request) {
   // empty
 }
-
 
 bool RequestHandler::OnBeforePluginLoad(CefRefPtr<CefBrowser> browser,
                                         const CefString& url,
@@ -32,7 +28,6 @@ bool RequestHandler::OnBeforePluginLoad(CefRefPtr<CefBrowser> browser,
   LOG(WARNING) << "plugin blocked: " << info->GetName().ToString();
   return true;
 }
-
 
 bool RequestHandler::OnBeforeResourceLoad(CefRefPtr<CefBrowser> browser,
                                     CefRefPtr<CefFrame> frame,
@@ -69,7 +64,6 @@ bool RequestHandler::OnBeforeResourceLoad(CefRefPtr<CefBrowser> browser,
   return false;
 }
 
-
 void RequestHandler::OnResourceRedirect(CefRefPtr<CefBrowser> browser,
                                         CefRefPtr<CefFrame> frame,
                                         const CefString& old_url,
@@ -83,6 +77,12 @@ void RequestHandler::OnResourceRedirect(CefRefPtr<CefBrowser> browser,
   request_->EmitRedirection(new_url.ToString());
 }
 
+CefRefPtr<CefResourceHandler> RequestHandler::GetResourceHandler(
+      CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
+      CefRefPtr<CefRequest> request) {
+  request_->IncrementPendingRequests();
+  return new ResourceHandler(request_);
+}
 
 void RequestHandler::Init() {
   std::string blacklisted_domains(FLAGS_blacklisted_domains);
@@ -107,6 +107,5 @@ void RequestHandler::Init() {
     }
   }
 }
-
 
 }  // namespace seo

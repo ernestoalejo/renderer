@@ -14,6 +14,7 @@ namespace seo {
 
 
 Client::Client(uint64_t id, const std::string& url) {
+  // TODO(ernesto): Use a CefRefPtr
   request_ = new Request(id, url);
 
   display_handler_ = new DisplayHandler();

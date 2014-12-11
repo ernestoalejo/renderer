@@ -73,6 +73,16 @@ void LoadHandler::OnLoadEnd(CefRefPtr<CefBrowser> browser,
 
 
 void LoadHandler::GetSourceCodeDelayed_() {
+  LOG(INFO) << "pending requests: " << request_->pending_requests();
+  if (request_->pending_requests() > 0) {
+    VLOG(2) << "delaying source code; pending requests: " <<
+        request_->pending_requests();
+    CefRefPtr<CefTask> task = common::TaskFromCallback(
+        base::Bind(&LoadHandler::GetSourceCodeDelayed_, this));
+    CefPostDelayedTask(TID_UI, task, 500);
+    return;
+  }
+
   VLOG(1) << "getting source code...";
 
   CefRefPtr<CefStringVisitor> visitor = common::StringVisitorFromCallback(

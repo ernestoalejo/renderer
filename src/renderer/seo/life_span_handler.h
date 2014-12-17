@@ -13,7 +13,7 @@ namespace seo {
 
 class LifeSpanHandler : public CefLifeSpanHandler {
  public:
-  explicit LifeSpanHandler(Request* request_);
+  explicit LifeSpanHandler(CefRefPtr<Request> request);
 
   static int CountOpenBrowsers();
   static void NewBrowserCreated();
@@ -23,7 +23,7 @@ class LifeSpanHandler : public CefLifeSpanHandler {
   virtual bool DoClose(CefRefPtr<CefBrowser> browser) OVERRIDE;
 
  private:
-  Request* request_;
+  CefRefPtr<Request> request_;
 
   IMPLEMENT_REFCOUNTING(LifeSpanHandler);
 };

@@ -7,32 +7,25 @@
 #include "glog/logging.h"
 #include "include/base/cef_lock.h"
 
-
 namespace seo {
 
-
 namespace {
-
 
 base::Lock g_browsers_count_lock;
 int g_browsers_count = 0;
 
-
 }
 
-
-LifeSpanHandler::LifeSpanHandler(Request* request)
+LifeSpanHandler::LifeSpanHandler(CefRefPtr<Request> request)
 : request_(request) {
   // empty
 }
-
 
 int LifeSpanHandler::CountOpenBrowsers() {
   base::AutoLock lock_scope(g_browsers_count_lock);
 
   return g_browsers_count;
 }
-
 
 void LifeSpanHandler::NewBrowserCreated() {
   base::AutoLock lock_scope(g_browsers_count_lock);
@@ -41,11 +34,9 @@ void LifeSpanHandler::NewBrowserCreated() {
   VLOG(2) << "new browser, " << g_browsers_count << " in total";
 }
 
-
 void LifeSpanHandler::OnAfterCreated(CefRefPtr<CefBrowser> browser) {
   request_->set_browser(browser);
 }
-
 
 bool LifeSpanHandler::DoClose(CefRefPtr<CefBrowser> browser) {
   base::AutoLock lock_scope(g_browsers_count_lock);
@@ -58,6 +49,5 @@ bool LifeSpanHandler::DoClose(CefRefPtr<CefBrowser> browser) {
   // Close the window inmediatly, we don't need to notify any parent window
   return false;
 }
-
 
 }  // namespace seo

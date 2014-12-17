@@ -38,9 +38,9 @@ class Client : public CefClient {
   // virtual CefRefPtr<CefDisplayHandler> GetDisplayHandler() OVERRIDE {
   //   return display_handler_;
   // }
-  // virtual CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() OVERRIDE {
-  //   return life_span_handler_;
-  // }
+  virtual CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() OVERRIDE {
+    return life_span_handler_;
+  }
 
   void Init();
 
@@ -50,7 +50,7 @@ class Client : public CefClient {
   // CefRefPtr<RequestHandler> request_handler_;
   // CefRefPtr<DisplayHandler> display_handler_;
   // CefRefPtr<LoadHandler> load_handler_;
-  // CefRefPtr<LifeSpanHandler> life_span_handler_;
+  CefRefPtr<LifeSpanHandler> life_span_handler_;
 
   IMPLEMENT_REFCOUNTING(Client);
 };

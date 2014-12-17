@@ -5,7 +5,7 @@
 -logbuflevel=-1
 
 # Verbose logging level
--v=1
+-v=2
 
 # Blacklist some unwanted domains
 -blacklisted_domains=config/blacklisted-domains

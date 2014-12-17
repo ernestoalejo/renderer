@@ -17,7 +17,7 @@ namespace seo {
 
 class RequestHandler : public CefRequestHandler {
  public:
-  explicit RequestHandler(Request* request);
+  explicit RequestHandler(CefRefPtr<Request> request);
 
   // CefRequestHandler methods
   virtual bool OnBeforePluginLoad(CefRefPtr<CefBrowser> browser,
@@ -40,7 +40,7 @@ class RequestHandler : public CefRequestHandler {
  private:
   std::vector<std::string> blacklisted_domains_;
   
-  Request* request_;
+  CefRefPtr<Request> request_;
 
   CefRefPtr<CefURLRequest> url_request_;
 

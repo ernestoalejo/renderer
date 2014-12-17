@@ -32,9 +32,9 @@ class Client : public CefClient {
   virtual CefRefPtr<CefRenderHandler> GetRenderHandler() OVERRIDE {
     return render_handler_;
   }
-  // virtual CefRefPtr<CefRequestHandler> GetRequestHandler() OVERRIDE {
-  //   return request_handler_;
-  // }
+  virtual CefRefPtr<CefRequestHandler> GetRequestHandler() OVERRIDE {
+    return request_handler_;
+  }
   virtual CefRefPtr<CefDisplayHandler> GetDisplayHandler() OVERRIDE {
     return display_handler_;
   }
@@ -47,7 +47,7 @@ class Client : public CefClient {
  private:
   CefRefPtr<Request> request_;
   CefRefPtr<common::RenderHandler> render_handler_;
-  // CefRefPtr<RequestHandler> request_handler_;
+  CefRefPtr<RequestHandler> request_handler_;
   CefRefPtr<DisplayHandler> display_handler_;
   CefRefPtr<LoadHandler> load_handler_;
   CefRefPtr<LifeSpanHandler> life_span_handler_;

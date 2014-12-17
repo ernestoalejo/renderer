@@ -41,7 +41,7 @@ int main(int argc, char* argv[]) {
     proto::seo::Request request;
     request.set_id(1);
     request.set_command(proto::seo::Request_Command_GET_SOURCE_CODE);
-    request.set_url("http://laovejaverde.es/");
+    request.set_url("http://www.laovejaverde.es/");
     if (!base::WriteDelimitedTo(request, &output_stream)) {
       LOG(FATAL) << "cannot write message to the output file";
     }

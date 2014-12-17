@@ -58,7 +58,6 @@ void LoadHandler::OnLoadError(CefRefPtr<CefBrowser> browser,
 void LoadHandler::OnLoadEnd(CefRefPtr<CefBrowser> browser,
                             CefRefPtr<CefFrame> frame,
                             int http_status_code) {
-  LOG(INFO) << "tt";
   if (request_->closing() || request_->failed() || !frame->IsMain()) {
     return;
   }

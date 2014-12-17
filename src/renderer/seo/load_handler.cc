@@ -13,7 +13,7 @@
 
 namespace seo {
 
-const int kSourceCodeDelay = 500;
+const int kSourceCodeDelay = 0;
 
 LoadHandler::LoadHandler(CefRefPtr<Request> request)
 : request_(request) {

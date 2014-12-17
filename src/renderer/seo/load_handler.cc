@@ -9,7 +9,7 @@
 
 #include "base/tasks.h"
 #include "base/util.h"
-#include "renderer/common/visitors.h"
+#include "base/visitors.h"
 
 
 namespace seo {
@@ -85,7 +85,7 @@ void LoadHandler::GetSourceCodeDelayed_() {
 
   VLOG(1) << "getting source code...";
 
-  CefRefPtr<CefStringVisitor> visitor = common::StringVisitorFromCallback(
+  CefRefPtr<CefStringVisitor> visitor = base::StringVisitorFromCallback(
       base::Bind(&LoadHandler::VisitSourceCode_, this));
   request_->browser()->GetMainFrame()->GetSource(visitor);
 }

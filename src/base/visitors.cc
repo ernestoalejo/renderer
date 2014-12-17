@@ -2,11 +2,9 @@
 // Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
-#include "renderer/common/visitors.h"
+#include "base/visitors.h"
 
-
-namespace common {
-
+namespace base {
 
 namespace {
 
@@ -30,11 +28,9 @@ class StringVisitor : public CefStringVisitor {
 
 }  // namespace
 
-
 CefRefPtr<CefStringVisitor> StringVisitorFromCallback(
     const base::Callback<void(const CefString& source)>& callback) {
   return new StringVisitor(callback);
 }
 
-
-}  // namespace common
+}  // namespace base

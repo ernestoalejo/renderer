@@ -15,7 +15,7 @@ namespace seo {
 
 class ResourceHandler : public CefResourceHandler, public CefURLRequestClient {
  public:
-  ResourceHandler(Request* request);
+  ResourceHandler(CefRefPtr<Request> request);
 
   // CefResourceHandler methods
   virtual void Cancel() OVERRIDE;
@@ -43,19 +43,18 @@ class ResourceHandler : public CefResourceHandler, public CefURLRequestClient {
                                 uint64 current, uint64 total) OVERRIDE;
 
  private:
+  CefRefPtr<Request> request_;
+
+  base::Lock lock_;
+
   std::vector<unsigned char> buffer_;
   int buffer_read_;
-
   bool complete_;
 
   CefRefPtr<CefCallback> read_response_callback_;
 
-  base::Lock lock_;
-
-  Request* request_;
-
   void ProcessRequestUIThread_(CefRefPtr<CefRequest> request,
-                       CefRefPtr<CefCallback> callback);
+                               CefRefPtr<CefCallback> callback);
   void CallReadResponseCallback_();
 
   IMPLEMENT_REFCOUNTING(ResourceHandler);

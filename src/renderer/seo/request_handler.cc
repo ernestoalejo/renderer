@@ -112,9 +112,8 @@ CefRefPtr<CefResourceHandler> RequestHandler::GetResourceHandler(
       CefRefPtr<CefRequest> request) {
   REQUIRE_IO_THREAD();
   
-  return NULL;
-  // request_->IncrementPendingRequests();
-  // return new ResourceHandler(request_);
+  request_->IncrementPendingRequests();
+  return new ResourceHandler(request_);
 }
 
 void RequestHandler::Init() {

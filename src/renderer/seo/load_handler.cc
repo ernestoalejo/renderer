@@ -13,7 +13,7 @@
 
 namespace seo {
 
-const int kSourceCodeDelay = 0;
+const int kSourceCodeDelay = 500;
 
 LoadHandler::LoadHandler(CefRefPtr<Request> request)
 : request_(request) {
@@ -74,6 +74,7 @@ void LoadHandler::GetSourceCodeDelayed_() {
   if (request_->pending_requests() > 0) {
     VLOG(2) << "delaying source code; pending requests: " <<
         request_->pending_requests();
+        
     CefRefPtr<CefTask> task = base::TaskFromCallback(
         base::Bind(&LoadHandler::GetSourceCodeDelayed_, this));
     CefPostDelayedTask(TID_UI, task, kSourceCodeDelay);

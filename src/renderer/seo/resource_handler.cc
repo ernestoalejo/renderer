@@ -13,8 +13,8 @@
 
 namespace seo {
 
-ResourceHandler::ResourceHandler(Request* request)
-: buffer_read_(0), complete_(false), request_(request) {
+ResourceHandler::ResourceHandler(CefRefPtr<Request> request)
+: request_(request), buffer_read_(0), complete_(false) {
   // empty
 }
 
@@ -36,8 +36,6 @@ void ResourceHandler::GetResponseHeaders(CefRefPtr<CefResponse> response,
                                          int64& response_length,
                                          CefString& redirect_url) {
   response_length = -1;
-
-  // Use the |response| object to set the mime type, http status code and other optional header values.
 }
 
 bool ResourceHandler::ProcessRequest(CefRefPtr<CefRequest> request,

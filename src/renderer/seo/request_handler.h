@@ -42,8 +42,6 @@ class RequestHandler : public CefRequestHandler {
   
   CefRefPtr<Request> request_;
 
-  CefRefPtr<CefURLRequest> url_request_;
-
   IMPLEMENT_REFCOUNTING(RequestHandler);
 };
 

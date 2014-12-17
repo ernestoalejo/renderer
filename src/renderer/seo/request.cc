@@ -111,8 +111,6 @@ void Request::EmitRedirection(const std::string& url) {
 }
 
 void Request::CloseBrowser_() {
-  base::AutoLock lock_scope(lock_);
-  
   closing_ = true;
 
   // Send the close order to the browser window in the correct thread

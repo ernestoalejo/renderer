@@ -15,7 +15,7 @@ Client::Client(uint64_t id, const std::string& url) {
   request_ = new Request(id, url);
 
   display_handler_ = new DisplayHandler();
-  // load_handler_ = new LoadHandler(request_);
+  load_handler_ = new LoadHandler(request_);
   render_handler_ = new common::RenderHandler(1900, 800);
   // request_handler_ = new RequestHandler(request_);
   life_span_handler_ = new LifeSpanHandler(request_);

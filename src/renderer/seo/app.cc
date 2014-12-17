@@ -47,6 +47,8 @@ void App::ReadRequests_() {
       LOG(INFO) << "received exit. waiting for all browsers to exit...";
       while (LifeSpanHandler::CountOpenBrowsers() > 0) {
         sleep(3);
+        VLOG(2) << "browsers pending to close: " <<
+            LifeSpanHandler::CountOpenBrowsers();
       }
 
       LOG(INFO) << "all browsers exited, quit message loop";

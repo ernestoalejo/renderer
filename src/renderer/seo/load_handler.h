@@ -9,13 +9,11 @@
 
 #include "renderer/seo/request.h"
 
-
 namespace seo {
-
 
 class LoadHandler : public CefLoadHandler {
  public:
-  explicit LoadHandler(Request* request_);
+  explicit LoadHandler(CefRefPtr<Request> request);
 
   // CefLoadHandler methods
   virtual void OnLoadError(CefRefPtr<CefBrowser> browser,
@@ -27,7 +25,7 @@ class LoadHandler : public CefLoadHandler {
                          int http_status_code) OVERRIDE;
 
  private:
-  Request* request_;
+  CefRefPtr<Request> request_;
 
   void GetSourceCodeDelayed_();
   void VisitSourceCode_(const CefString& source);
@@ -35,8 +33,6 @@ class LoadHandler : public CefLoadHandler {
   IMPLEMENT_REFCOUNTING(LoadHandler);
 };
 
-
 }  // namespace seo
-
 
 #endif  // RENDERER_SEO_LOAD_HANDLER_H_

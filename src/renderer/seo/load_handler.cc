@@ -11,15 +11,14 @@
 #include "base/util.h"
 #include "base/visitors.h"
 
-
 namespace seo {
 
+const int kSourceCodeDelay = 500;
 
-LoadHandler::LoadHandler(Request* request)
+LoadHandler::LoadHandler(CefRefPtr<Request> request)
 : request_(request) {
   // empty
 }
-
 
 void LoadHandler::OnLoadError(CefRefPtr<CefBrowser> browser,
                           CefRefPtr<CefFrame> frame,
@@ -56,10 +55,10 @@ void LoadHandler::OnLoadError(CefRefPtr<CefBrowser> browser,
   }
 }
 
-
 void LoadHandler::OnLoadEnd(CefRefPtr<CefBrowser> browser,
                             CefRefPtr<CefFrame> frame,
                             int http_status_code) {
+  LOG(INFO) << "tt";
   if (request_->closing() || request_->failed() || !frame->IsMain()) {
     return;
   }
@@ -68,9 +67,8 @@ void LoadHandler::OnLoadEnd(CefRefPtr<CefBrowser> browser,
 
   CefRefPtr<CefTask> task = base::TaskFromCallback(
       base::Bind(&LoadHandler::GetSourceCodeDelayed_, this));
-  CefPostDelayedTask(TID_UI, task, 0);
+  CefPostDelayedTask(TID_UI, task, kSourceCodeDelay);
 }
-
 
 void LoadHandler::GetSourceCodeDelayed_() {
   LOG(INFO) << "pending requests: " << request_->pending_requests();
@@ -79,7 +77,7 @@ void LoadHandler::GetSourceCodeDelayed_() {
         request_->pending_requests();
     CefRefPtr<CefTask> task = base::TaskFromCallback(
         base::Bind(&LoadHandler::GetSourceCodeDelayed_, this));
-    CefPostDelayedTask(TID_UI, task, 500);
+    CefPostDelayedTask(TID_UI, task, kSourceCodeDelay);
     return;
   }
 
@@ -90,7 +88,6 @@ void LoadHandler::GetSourceCodeDelayed_() {
   request_->browser()->GetMainFrame()->GetSource(visitor);
 }
 
-
 void LoadHandler::VisitSourceCode_(const CefString& source) {
   if (request_->closing() || request_->failed()) {
     return;
@@ -100,6 +97,5 @@ void LoadHandler::VisitSourceCode_(const CefString& source) {
 
   request_->EmitSourceCode(source);
 }
-
 
 }  // namespace seo

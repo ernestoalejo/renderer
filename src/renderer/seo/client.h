@@ -26,9 +26,9 @@ class Client : public CefClient {
   Client(uint64_t id, const std::string& url);
 
   // CefClient methods
-  // virtual CefRefPtr<CefLoadHandler> GetLoadHandler() OVERRIDE {
-  //   return load_handler_;
-  // }
+  virtual CefRefPtr<CefLoadHandler> GetLoadHandler() OVERRIDE {
+    return load_handler_;
+  }
   virtual CefRefPtr<CefRenderHandler> GetRenderHandler() OVERRIDE {
     return render_handler_;
   }
@@ -49,7 +49,7 @@ class Client : public CefClient {
   CefRefPtr<common::RenderHandler> render_handler_;
   // CefRefPtr<RequestHandler> request_handler_;
   CefRefPtr<DisplayHandler> display_handler_;
-  // CefRefPtr<LoadHandler> load_handler_;
+  CefRefPtr<LoadHandler> load_handler_;
   CefRefPtr<LifeSpanHandler> life_span_handler_;
 
   IMPLEMENT_REFCOUNTING(Client);

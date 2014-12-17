@@ -2,25 +2,19 @@
 // Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
-#ifndef RENDERER_KARMA_HANDLER_H_
-#define RENDERER_KARMA_HANDLER_H_
+#ifndef RENDERER_KARMA_CLIENT_H_
+#define RENDERER_KARMA_CLIENT_H_
 
 #include "include/cef_client.h"
 
 #include "renderer/common/render_handler.h"
 
-
 namespace karma {
 
-
-class Handler : public CefClient,
+class Client : public CefClient,
                 public CefLoadHandler {
  public:
-  explicit Handler(CefRefPtr<common::RenderHandler> render_handler);
-  ~Handler();
-
-  // Provide access to the single global instance of this object.
-  static Handler* GetInstance();
+  Client();
 
   virtual CefRefPtr<CefLoadHandler> GetLoadHandler() OVERRIDE {
     return this;
@@ -42,11 +36,9 @@ class Handler : public CefClient,
  private:
   CefRefPtr<CefRenderHandler> render_handler_;
 
-  IMPLEMENT_REFCOUNTING(Handler);
+  IMPLEMENT_REFCOUNTING(Client);
 };
-
 
 }  // namespace karma
 
-
-#endif  // RENDERER_KARMA_HANDLER_H_
+#endif  // RENDERER_KARMA_CLIENT_H_

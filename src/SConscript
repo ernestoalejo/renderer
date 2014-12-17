@@ -10,7 +10,7 @@ karma_sources = '''
   renderer/common/initialize.cc
   renderer/common/render_handler.cc
   renderer/karma/app.cc
-  renderer/karma/handler.cc
+  renderer/karma/client.cc
   renderer/karma/main.cc
 '''
 

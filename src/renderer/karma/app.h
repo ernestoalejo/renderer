@@ -9,9 +9,7 @@
 
 #include "renderer/common/render_handler.h"
 
-
 namespace karma {
-
 
 class App : public CefApp, public CefBrowserProcessHandler {
  public:
@@ -23,14 +21,10 @@ class App : public CefApp, public CefBrowserProcessHandler {
   virtual void OnContextInitialized() OVERRIDE;
 
  private:
-  CefRefPtr<common::RenderHandler> render_handler_;
-
   IMPLEMENT_REFCOUNTING(App);
 };
 
-
 }  // namespace karma
-
 
 #endif  // RENDERER_KARMA_APP_H_
 

@@ -11,34 +11,29 @@
 #include "include/cef_command_line.h"
 
 #include "base/util.h"
-#include "renderer/karma/handler.h"
-
+#include "renderer/karma/client.h"
 
 DEFINE_string(url, "", "url to load");
 
-
 namespace karma {
-
 
 void App::OnContextInitialized() {
   REQUIRE_UI_THREAD();
-
-  render_handler_ = new common::RenderHandler(1900, 800);
-
-  CefRefPtr<Handler> handler(new Handler(render_handler_));
-
-  CefBrowserSettings browser_settings;
-  CefWindowInfo window_info;
 
   std::string url(FLAGS_url);
   if (url.empty()) {
     LOG(FATAL) << "the url flag cannot be empty";
   }
 
+  CefBrowserSettings browser_settings;
+  
+  CefWindowInfo window_info;
+  window_info.windowless_rendering_enabled = true;
+
   LOG(INFO) << "opening: " << url;
-  CefBrowserHost::CreateBrowser(window_info, handler.get(), url.c_str(),
+  CefRefPtr<Client> client(new Client());
+  CefBrowserHost::CreateBrowser(window_info, client.get(), url.c_str(),
       browser_settings, NULL);
 }
-
 
 }  // namespace karma

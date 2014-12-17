@@ -2,38 +2,20 @@
 // Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
-#include "renderer/karma/handler.h"
+#include "renderer/karma/client.h"
 
-#include <glog/logging.h>
-
-#include "base/util.h"
+#include "glog/logging.h"
 #include "include/cef_app.h"
 
+#include "base/util.h"
 
 namespace karma {
 
-namespace {
-
-Handler* g_instance = NULL;
-
-}  // namespace
-
-
-Handler::Handler(CefRefPtr<common::RenderHandler> render_handler)
-: render_handler_(render_handler) {
-  ASSERT(!g_instance);
-  g_instance = this;
+Client::Client() {
+  render_handler_ = new common::RenderHandler(1900, 800);
 }
 
-Handler::~Handler() {
-  g_instance = NULL;
-}
-
-Handler* Handler::GetInstance() {
-  return g_instance;
-}
-
-void Handler::OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
+void Client::OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
                                    bool isLoading, bool canGoBack,
                                    bool canGoForward) {
   REQUIRE_UI_THREAD();
@@ -44,7 +26,7 @@ void Handler::OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
   }
 }
 
-void Handler::OnLoadError(CefRefPtr<CefBrowser> browser,
+void Client::OnLoadError(CefRefPtr<CefBrowser> browser,
                           CefRefPtr<CefFrame> frame,
                           ErrorCode errorCode, const CefString& errorText,
                           const CefString& failedUrl) {
@@ -57,6 +39,5 @@ void Handler::OnLoadError(CefRefPtr<CefBrowser> browser,
   LOG(FATAL) << "error loading (" << errorCode << "): " <<
       errorText.ToString();
 }
-
 
 }  // namespace karma

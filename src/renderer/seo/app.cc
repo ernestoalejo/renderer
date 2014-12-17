@@ -5,7 +5,6 @@
 #include "renderer/seo/app.h"
 
 #include <iostream>
-#include <thread>  // NOLINT
 
 #include "glog/logging.h"
 #include "google/protobuf/io/zero_copy_stream_impl.h"
@@ -18,20 +17,19 @@
 #include "renderer/common/tasks.h"
 #include "renderer/seo/client.h"
 
-
 namespace seo {
-
 
 void App::OnContextInitialized() {
   REQUIRE_UI_THREAD();
 
-  std::thread thread(std::bind(&App::ReadRequests_, this));
-  thread.detach();
+  CefPostTask(TID_FILE,
+      common::TaskFromCallback(base::Bind(&App::ReadRequests_, this)));
 }
 
-
 void App::ReadRequests_() {
-  LOG(INFO) << "waiting for requests...";
+  REQUIRE_FILE_THREAD();
+
+  LOG(INFO) << "waiting for requests in the file thread...";
 
   google::protobuf::io::FileInputStream input_stream(STDIN_FILENO);
   while (true) {
@@ -73,6 +71,5 @@ void App::ReadRequests_() {
     LifeSpanHandler::NewBrowserCreated();
   }
 }
-
 
 }  // namespace seo

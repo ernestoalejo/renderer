@@ -9,9 +9,7 @@
 
 #include "renderer/seo/request.h"
 
-
 namespace seo {
-
 
 class LifeSpanHandler : public CefLifeSpanHandler {
  public:
@@ -29,7 +27,6 @@ class LifeSpanHandler : public CefLifeSpanHandler {
 
   IMPLEMENT_REFCOUNTING(LifeSpanHandler);
 };
-
 
 }  // namespace seo
 

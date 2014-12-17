@@ -7,9 +7,7 @@
 
 #include "include/cef_app.h"
 
-
 namespace seo {
-
 
 class App : public CefApp, public CefBrowserProcessHandler {
  public:
@@ -27,9 +25,7 @@ class App : public CefApp, public CefBrowserProcessHandler {
   IMPLEMENT_REFCOUNTING(App);
 };
 
-
 }  // namespace seo
-
 
 #endif  // RENDERER_SEO_APP_H_
 

@@ -19,47 +19,42 @@
 #include "renderer/seo/request.h"
 #include "renderer/seo/request_handler.h"
 
-
 namespace seo {
-
 
 class Client : public CefClient {
  public:
   Client(uint64_t id, const std::string& url);
 
   // CefClient methods
-  virtual CefRefPtr<CefLoadHandler> GetLoadHandler() OVERRIDE {
-    return load_handler_;
-  }
+  // virtual CefRefPtr<CefLoadHandler> GetLoadHandler() OVERRIDE {
+  //   return load_handler_;
+  // }
   virtual CefRefPtr<CefRenderHandler> GetRenderHandler() OVERRIDE {
     return render_handler_;
   }
-  virtual CefRefPtr<CefRequestHandler> GetRequestHandler() OVERRIDE {
-    return request_handler_;
-  }
-  virtual CefRefPtr<CefDisplayHandler> GetDisplayHandler() OVERRIDE {
-    return display_handler_;
-  }
-  virtual CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() OVERRIDE {
-    return life_span_handler_;
-  }
+  // virtual CefRefPtr<CefRequestHandler> GetRequestHandler() OVERRIDE {
+  //   return request_handler_;
+  // }
+  // virtual CefRefPtr<CefDisplayHandler> GetDisplayHandler() OVERRIDE {
+  //   return display_handler_;
+  // }
+  // virtual CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() OVERRIDE {
+  //   return life_span_handler_;
+  // }
 
   void Init();
 
  private:
+  CefRefPtr<Request> request_;
   CefRefPtr<common::RenderHandler> render_handler_;
-  CefRefPtr<RequestHandler> request_handler_;
-  CefRefPtr<DisplayHandler> display_handler_;
-  CefRefPtr<LoadHandler> load_handler_;
-  CefRefPtr<LifeSpanHandler> life_span_handler_;
-
-  Request* request_;
+  // CefRefPtr<RequestHandler> request_handler_;
+  // CefRefPtr<DisplayHandler> display_handler_;
+  // CefRefPtr<LoadHandler> load_handler_;
+  // CefRefPtr<LifeSpanHandler> life_span_handler_;
 
   IMPLEMENT_REFCOUNTING(Client);
 };
 
-
 }  // namespace seo
-
 
 #endif  // RENDERER_SEO_CLIENT_H_

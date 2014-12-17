@@ -9,25 +9,22 @@
 
 #include "base/util.h"
 
-
 namespace seo {
 
-
 Client::Client(uint64_t id, const std::string& url) {
-  // TODO(ernesto): Use a CefRefPtr
   request_ = new Request(id, url);
 
-  display_handler_ = new DisplayHandler();
-  load_handler_ = new LoadHandler(request_);
+  // display_handler_ = new DisplayHandler();
+  // load_handler_ = new LoadHandler(request_);
   render_handler_ = new common::RenderHandler(1900, 800);
-  request_handler_ = new RequestHandler(request_);
-  life_span_handler_ = new LifeSpanHandler(request_);
+  // request_handler_ = new RequestHandler(request_);
+  // life_span_handler_ = new LifeSpanHandler(request_);
 }
-
 
 void Client::Init() {
-  request_handler_->Init();
-}
+  REQUIRE_FILE_THREAD();
 
+  // request_handler_->Init();
+}
 
 }  // namespace seo

@@ -2,13 +2,11 @@
 // Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
-#include "renderer/common/protobufs.h"
+#include "base/protobufs.h"
 
-#include <google/protobuf/io/coded_stream.h>
+#include "google/protobuf/io/coded_stream.h"
 
-
-namespace common {
-
+namespace base {
 
 bool WriteDelimitedTo(const google::protobuf::MessageLite& message,
                       google::protobuf::io::ZeroCopyOutputStream* raw_output) {
@@ -33,7 +31,6 @@ bool WriteDelimitedTo(const google::protobuf::MessageLite& message,
   return true;
 }
 
-
 bool ReadDelimitedFrom(google::protobuf::io::ZeroCopyInputStream* raw_input,
                        google::protobuf::MessageLite* message) {
   google::protobuf::io::CodedInputStream input(raw_input);
@@ -57,5 +54,4 @@ bool ReadDelimitedFrom(google::protobuf::io::ZeroCopyInputStream* raw_input,
   return true;
 }
 
-
-}  // namespace common
+}  // namespace base

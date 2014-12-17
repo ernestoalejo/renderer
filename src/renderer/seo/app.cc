@@ -11,10 +11,10 @@
 #include "include/base/cef_bind.h"
 #include "include/cef_browser.h"
 
+#include "base/protobufs.h"
 #include "base/tasks.h"
 #include "base/util.h"
 #include "proto/seo/request.pb.h"
-#include "renderer/common/protobufs.h"
 #include "renderer/seo/client.h"
 
 namespace seo {
@@ -34,7 +34,7 @@ void App::ReadRequests_() {
   google::protobuf::io::FileInputStream input_stream(STDIN_FILENO);
   while (true) {
     proto::seo::Request request;
-    if (!common::ReadDelimitedFrom(&input_stream, &request)) {
+    if (!base::ReadDelimitedFrom(&input_stream, &request)) {
       LOG(FATAL) << "cannot read delimited request";
     }
 
@@ -64,7 +64,7 @@ void App::ReadRequests_() {
     CefWindowInfo window_info;
     window_info.windowless_rendering_enabled = true;
 
-    LOG(INFO) << "request url: " << request.url();
+    LOG(INFO) << "received request to url: " << request.url();
     CefBrowserHost::CreateBrowser(window_info, client, request.url(),
         browser_settings, NULL);
 

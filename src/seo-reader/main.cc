@@ -7,8 +7,8 @@
 #include "glog/logging.h"
 #include "google/protobuf/io/zero_copy_stream_impl.h"
 
+#include "base/protobufs.h"
 #include "proto/seo/response.pb.h"
-#include "renderer/common/protobufs.h"
 
 
 int main(int argc, char* argv[]) {
@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
   google::protobuf::io::FileInputStream input_stream(STDIN_FILENO);
   while (true) {
     proto::seo::Response response;
-    if (!common::ReadDelimitedFrom(&input_stream, &response)) {
+    if (!base::ReadDelimitedFrom(&input_stream, &response)) {
       // EOF is not a real error
       if (fgetc(stdin) == EOF) {
         break;

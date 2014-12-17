@@ -17,6 +17,7 @@ karma_sources = '''
 
 # Sources for the seo app
 seo_sources = '''
+  base/protobufs.cc
   base/tasks.cc
   base/visitors.cc
 
@@ -24,7 +25,6 @@ seo_sources = '''
   proto/seo/response.pb.cc
   
   renderer/common/initialize.cc
-  renderer/common/protobufs.cc
   renderer/common/render_handler.cc
   renderer/seo/app.cc
   renderer/seo/client.cc
@@ -40,16 +40,16 @@ seo_sources = '''
 
 # Sources for the helper that generates seo requests
 seo_generator_sources = '''
+  base/protobufs.cc
   proto/seo/request.pb.cc
-  renderer/common/protobufs.cc
   seo-generator/main.cc
 '''
 
 
 # Sources for the helper that reads seo reads
 seo_reader_sources = '''
+  base/protobufs.cc
   proto/seo/response.pb.cc
-  renderer/common/protobufs.cc
   seo-reader/main.cc
 '''
 

@@ -7,8 +7,8 @@
 #include "glog/logging.h"
 #include "google/protobuf/io/zero_copy_stream_impl.h"
 
+#include "base/protobufs.h"
 #include "proto/seo/request.pb.h"
-#include "renderer/common/protobufs.h"
 
 
 int main(int argc, char* argv[]) {
@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
   //   request.set_command(proto::seo::Request_Command_GET_SOURCE_CODE);
   //   request.set_url("http://magpcss.org/ceforum/apidocs3/projects/"
   //     "(default)/CefBrowserHost.html");
-  //   if (!common::WriteDelimitedTo(request, &output_stream)) {
+  //   if (!base::WriteDelimitedTo(request, &output_stream)) {
   //     LOG(FATAL) << "cannot write message to the output file";
   //   }
   // }
@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
     request.set_id(1);
     request.set_command(proto::seo::Request_Command_GET_SOURCE_CODE);
     request.set_url("http://laovejaverde.es/");
-    if (!common::WriteDelimitedTo(request, &output_stream)) {
+    if (!base::WriteDelimitedTo(request, &output_stream)) {
       LOG(FATAL) << "cannot write message to the output file";
     }
   }
@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
     // Write exit request
     proto::seo::Request request;
     request.set_command(proto::seo::Request_Command_EXIT);
-    if (!common::WriteDelimitedTo(request, &output_stream)) {
+    if (!base::WriteDelimitedTo(request, &output_stream)) {
       LOG(FATAL) << "cannot write message to the output file";
     }
   }

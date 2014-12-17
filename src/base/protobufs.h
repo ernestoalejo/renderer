@@ -2,14 +2,12 @@
 // Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
-#ifndef RENDERER_COMMON_PROTOBUFS_H_
-#define RENDERER_COMMON_PROTOBUFS_H_
+#ifndef BASE_PROTOBUFS_H_
+#define BASE_PROTOBUFS_H_
 
 #include <google/protobuf/message.h>
 
-
-namespace common {
-
+namespace base {
 
 bool WriteDelimitedTo(const google::protobuf::MessageLite& message,
                       google::protobuf::io::ZeroCopyOutputStream* raw_output);
@@ -17,10 +15,9 @@ bool WriteDelimitedTo(const google::protobuf::MessageLite& message,
 bool ReadDelimitedFrom(google::protobuf::io::ZeroCopyInputStream* raw_input,
                        google::protobuf::MessageLite* message);
 
-}  // namespace common
+}  // namespace base
 
-
-#endif  // RENDERER_COMMON_PROTOBUFS_H_
+#endif  // BASE_PROTOBUFS_H_
 
 
 

@@ -7,9 +7,9 @@
 #include "glog/logging.h"
 #include "include/base/cef_bind.h"
 
+#include "base/protobufs.h"
 #include "base/tasks.h"
 #include "base/util.h"
-#include "renderer/common/protobufs.h"
 
 
 namespace seo {
@@ -74,7 +74,7 @@ void Request::CloseBrowserUIThread_() {
 
 
 void Request::Write_(const proto::seo::Response& response) {
-  if (!common::WriteDelimitedTo(response, &output_stream_)) {
+  if (!base::WriteDelimitedTo(response, &output_stream_)) {
     LOG(FATAL) << "cannot write response message to stdout";
   }
 

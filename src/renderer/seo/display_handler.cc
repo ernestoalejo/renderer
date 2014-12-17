@@ -6,15 +6,12 @@
 
 #include "glog/logging.h"
 
-
 namespace seo {
-
 
 void DisplayHandler::OnAddressChange(CefRefPtr<CefBrowser> browser,
                                      CefRefPtr<CefFrame> frame,
                                      const CefString& url) {
   LOG(INFO) << "address change: " << url.ToString();
 }
-
 
 }  // namespace seo

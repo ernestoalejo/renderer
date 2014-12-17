@@ -10,9 +10,7 @@
 
 #include "include/cef_display_handler.h"
 
-
 namespace seo {
-
 
 class DisplayHandler : public CefDisplayHandler {
  public:
@@ -25,8 +23,6 @@ class DisplayHandler : public CefDisplayHandler {
   IMPLEMENT_REFCOUNTING(DisplayHandler);
 };
 
-
 }  // namespace seo
-
 
 #endif  // RENDERER_SEO_DISPLAY_HANDLER_H_

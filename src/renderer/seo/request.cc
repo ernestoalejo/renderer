@@ -7,9 +7,9 @@
 #include "glog/logging.h"
 #include "include/base/cef_bind.h"
 
+#include "base/tasks.h"
 #include "base/util.h"
 #include "renderer/common/protobufs.h"
-#include "renderer/common/tasks.h"
 
 
 namespace seo {
@@ -61,7 +61,7 @@ void Request::CloseBrowser_() {
 
   // Send the close order to the browser window in the correct thread
   auto callback = base::Bind(&Request::CloseBrowserUIThread_, this);
-  CefPostTask(TID_UI, common::TaskFromCallback(callback));
+  CefPostTask(TID_UI, base::TaskFromCallback(callback));
 }
 
 

@@ -8,14 +8,10 @@
 #include "include/base/cef_callback.h"
 #include "include/cef_task.h"
 
-
-namespace common {
-
+namespace base {
 
 CefRefPtr<CefTask> TaskFromCallback(const base::Callback<void()>& callback);
 
-
-}  // namespace common
-
+}  // namespace base
 
 #endif  // RENDERER_COMMON_TASKS_H_

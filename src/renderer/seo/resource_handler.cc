@@ -8,8 +8,7 @@
 #include "include/base/cef_bind.h"
 #include "include/cef_urlrequest.h"
 
-#include "renderer/common/tasks.h"
-
+#include "base/tasks.h"
 #include "base/util.h"
 
 namespace seo {
@@ -47,7 +46,7 @@ bool ResourceHandler::ProcessRequest(CefRefPtr<CefRequest> request,
   // browser instance
   auto task = base::Bind(&ResourceHandler::ProcessRequestUIThread_, this,
       request, callback);
-  CefPostTask(TID_UI, common::TaskFromCallback(task));
+  CefPostTask(TID_UI, base::TaskFromCallback(task));
 
   // We are process the request
   return true;

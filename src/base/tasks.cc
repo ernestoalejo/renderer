@@ -2,11 +2,9 @@
 // Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
-#include "renderer/common/tasks.h"
+#include "base/tasks.h"
 
-
-namespace common {
-
+namespace base {
 
 namespace {
 
@@ -29,10 +27,8 @@ class Task : public CefTask {
 
 }  // namespace
 
-
 CefRefPtr<CefTask> TaskFromCallback(const base::Callback<void()>& callback) {
   return new Task(callback);
 }
 
-
-}  // namespace common
+}  // namespace base

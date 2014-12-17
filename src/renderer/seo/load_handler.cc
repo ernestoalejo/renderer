@@ -7,8 +7,8 @@
 #include "glog/logging.h"
 #include "include/base/cef_bind.h"
 
+#include "base/tasks.h"
 #include "base/util.h"
-#include "renderer/common/tasks.h"
 #include "renderer/common/visitors.h"
 
 
@@ -66,7 +66,7 @@ void LoadHandler::OnLoadEnd(CefRefPtr<CefBrowser> browser,
 
   LOG(INFO) << "page loaded: " << request_->url();
 
-  CefRefPtr<CefTask> task = common::TaskFromCallback(
+  CefRefPtr<CefTask> task = base::TaskFromCallback(
       base::Bind(&LoadHandler::GetSourceCodeDelayed_, this));
   CefPostDelayedTask(TID_UI, task, 0);
 }
@@ -77,7 +77,7 @@ void LoadHandler::GetSourceCodeDelayed_() {
   if (request_->pending_requests() > 0) {
     VLOG(2) << "delaying source code; pending requests: " <<
         request_->pending_requests();
-    CefRefPtr<CefTask> task = common::TaskFromCallback(
+    CefRefPtr<CefTask> task = base::TaskFromCallback(
         base::Bind(&LoadHandler::GetSourceCodeDelayed_, this));
     CefPostDelayedTask(TID_UI, task, 500);
     return;

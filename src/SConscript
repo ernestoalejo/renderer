@@ -17,12 +17,14 @@ karma_sources = '''
 
 # Sources for the seo app
 seo_sources = '''
+  base/tasks.cc
+
   proto/seo/request.pb.cc
   proto/seo/response.pb.cc
+  
   renderer/common/initialize.cc
   renderer/common/protobufs.cc
   renderer/common/render_handler.cc
-  renderer/common/tasks.cc
   renderer/common/visitors.cc
   renderer/seo/app.cc
   renderer/seo/client.cc

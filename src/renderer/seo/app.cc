@@ -11,10 +11,10 @@
 #include "include/base/cef_bind.h"
 #include "include/cef_browser.h"
 
+#include "base/tasks.h"
 #include "base/util.h"
 #include "proto/seo/request.pb.h"
 #include "renderer/common/protobufs.h"
-#include "renderer/common/tasks.h"
 #include "renderer/seo/client.h"
 
 namespace seo {
@@ -23,7 +23,7 @@ void App::OnContextInitialized() {
   REQUIRE_UI_THREAD();
 
   CefPostTask(TID_FILE,
-      common::TaskFromCallback(base::Bind(&App::ReadRequests_, this)));
+      base::TaskFromCallback(base::Bind(&App::ReadRequests_, this)));
 }
 
 void App::ReadRequests_() {
@@ -52,7 +52,7 @@ void App::ReadRequests_() {
       LOG(INFO) << "all browsers exited, quit message loop";
 
       CefPostTask(TID_UI,
-          common::TaskFromCallback(base::Bind(CefQuitMessageLoop)));
+          base::TaskFromCallback(base::Bind(CefQuitMessageLoop)));
 
       return;
     }
